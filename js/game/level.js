@@ -6,12 +6,23 @@ var Level;
 	var formulas = {
 		'sin_1': {
 
+			ampitude: 40,
+
 			calculate : function (x, part) {
-				return (Math.sin((x - part.x) / (part.a + 0.5) / 100)*part.b*40) + part.y;
+				var a = part.a - 0.5;
+				if(a > 0) {
+					a += 0.5;
+				} else {
+					a -= 0.5;
+				}
+				return (Math.sin((x - part.x) / a / 100)*part.b * this.ampitude) + part.y;
 			},
 
-			getMaxHeight: function (part) {
-				return part.y + 40;
+			getMax: function (part) {
+				return part.y + this.ampitude;
+			},
+			getMin: function (part) {
+				return part.y - this.ampitude;
 			}
 		}
 	}
@@ -62,7 +73,7 @@ var Level;
 				};
 
 				formula = part.formula;
-				maxHeight = Math.max(maxHeight, formula.getMaxHeight(part));
+				maxHeight = Math.max(maxHeight, formula.getMax(part));
 				x += part.width;
 				y = formula.calculate(x, part);
 
@@ -108,7 +119,7 @@ var Level;
 				canvas = this.canvas = document.createElement('canvas'),
 				ctx = canvas.getContext('2d'),
 
-				height = canvas.height = part.formula.getMaxHeight(part),
+				height = canvas.height = part.formula.getMax(part),
 				width = canvas.width = part.width;
 			
 			canvas.style.left = part.x + 'px';

@@ -2,7 +2,7 @@
 	'use strict';
 
 	$(function () {
-		var level1 = new Level(Math.random());
+		var level1 = new Level("level1");
 	});
 
 })(jQuery);
