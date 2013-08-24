@@ -28,7 +28,10 @@ var Level,
 
 		this.createPlayer();
 
-		this.container.style.height = Math.max(this.floor.height, this.background.height) + 'px';
+		this.height = Math.max(this.floor.height, this.background.height);
+		this.width = this.floor.width;
+		this.container.style.height = this.height + 'px';
+		this.container.style.width = this.width + 'px';
 
 		this.reset();
 
@@ -83,7 +86,7 @@ var Level,
 			window.addEventListener();
 			window.setInterval(function () {
 				level.update();
-			}, 33);
+			}, 16);
 			this.registerKeyListeners();
 		},
 
@@ -125,8 +128,18 @@ var Level,
 
 
 		update: function() {
+			var prevTime = this.time || Date.now();
+
+			this.time = Date.now();
+			
 
 
+			this.player.update(this, this.time - prevTime, {
+				MOVE_LEFT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_LEFT],
+				MOVE_RIGHT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_RIGHT]
+			});
+
+			this.container.style.webkitTransform = 'translate3d(' + (-this.player.position.x + 160) + 'px, ' + (this.player.position.y-this.height + 170) + 'px, 0px)';
 			//this.player.setPosition(this.rng.random(0,100), 0)
 		}
 

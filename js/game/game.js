@@ -60,7 +60,7 @@ var Game,
 
 		rescale: function () {
 			var scale = window.innerWidth / 320;
-			//this.container.style.webkitTransform = 'scale3d(' + scale + ', ' + scale + ', 1)';
+			this.container.style.webkitTransform = 'scale3d(' + scale + ', ' + scale + ', 1)';
 		},
 
 
