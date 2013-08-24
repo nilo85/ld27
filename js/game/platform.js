@@ -28,33 +28,34 @@ var Platform;
 	}
 
 
-	Platform = function (type, seed) {
+	Platform = function (width, type, seed) {
 
 		this.rng = new RNG(seed);
+
+		this.width = width;
+		this.type = type;
 
 		this.container = null;
 		this.parts = [];
 		this.canvases = [];
 		
-		this.create(type);
+		this.create();
 	}
 
 	Platform.prototype = {
-		create: function (type) {
-			var i,
-				x = 0,
+		create: function () {
+			var x = 0,
 				y = 500,
 				maxHeight = 0,
 				part,
-				formula,
-				parts = this.rng.random(50, 200);
+				formula;
 
-			for (i = 0; i < parts; i++) {
+			while(x < this.width) {
 
 				part = {
 					x: x,
 					y: y,
-					width: this.rng.random(100, 500),
+					width: Math.min(this.width - x, this.rng.random(100, 500)),
 					formula: formulas['sin_1'],
 					a: this.rng.uniform(),
 					b: this.rng.uniform(),
@@ -75,7 +76,7 @@ var Platform;
 			this.height = maxHeight;
 
 			this.container = document.createElement('div');
-			this.container.className = 'platform ' + type;
+			this.container.className = 'platform ' + this.type;
 			this.container.style.height = maxHeight + 'px';
 
 			this.createCanvases();
@@ -105,10 +106,13 @@ var Platform;
 				canvas = this.canvas = document.createElement('canvas'),
 				ctx = canvas.getContext('2d'),
 
-				height = canvas.height = part.formula.getMax(part),
-				width = canvas.width = part.width;
+				height = canvas.height = part.formula.getMax(part) * 2,
+				width = canvas.width = part.width * 2; 
 			
 			canvas.style.left = part.x + 'px';
+			canvas.style.width = width / 2 + 'px';
+			canvas.style.height = height / 2 + 'px';
+
 			ctx.beginPath();
 
 			ctx.moveTo(0, height);
@@ -117,7 +121,7 @@ var Platform;
 			for (x = part.x; x <= part.x + part.width; x++) {
 				y = part.formula.calculate(x, part);
 
-				ctx.lineTo(x - part.x, height-y);
+				ctx.lineTo((x - part.x) * 2, height-(y*2));
 			}
 
 			ctx.lineTo(width+1, height);

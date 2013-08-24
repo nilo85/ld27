@@ -39,7 +39,18 @@ var Player,
 				return;
 			}
 
-			this.speed.y -= 0.00982*time;
+			var prevX = this.position.x,
+				prevY = this.position.y,
+				prevGroundY = level.getY(prevX, 999999),
+				x,
+				y,
+				groundY;
+
+			if (prevGroundY === prevY && state.JUMP) {
+				this.speed.y = 1;
+			} else {
+				this.speed.y -= 0.00982*time;
+			}
 			if (state.MOVE_LEFT) {
 				this.speed.x -= 0.1*time;
 			} else if (state.MOVE_RIGHT) {
@@ -52,19 +63,18 @@ var Player,
 				this.speed.x = Math.min(this.speed.x, 0);
 			}
 
-			this.speed.x = Math.min(this.speed.x, 1);
-			this.speed.x = Math.max(this.speed.x, -1);
+			this.speed.x = Math.max(Math.min(this.speed.x, 1), -1);
 
-			var prevY = this.position.y,
+				x = prevX + this.speed.x * time,
 				y = prevY + this.speed.y * time,
-				prevX = this.position.x,
-				x = prevX + this.speed.x * time;
+				groundY = level.getY(x, 999999);
 
 
 
 
-			this.position.y = Math.max(y, level.getY(this.position.x, 999999));
 			this.position.x = x; 
+			this.position.y = Math.max(y, groundY);
+
 
 
 			this.container.style.webkitTransform = 'translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)'

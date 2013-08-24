@@ -18,18 +18,18 @@ var Level,
 		this.container = undefined;
 		this.player = undefined;
 
-
+		this.width = this.rng.random(320*10,320*40);
 
 		this.createContainer();
 
-		this.floor = this.createPlatform('floor', this.rng.uniform());
-		this.background = this.createPlatform('background', this.rng.uniform());
+		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform());
+		this.background = this.createPlatform(this.width, 'background', this.rng.uniform());
 
 
 		this.createPlayer();
 
 		this.height = Math.max(this.floor.height, this.background.height);
-		this.width = this.floor.width;
+		
 		this.container.style.height = this.height + 'px';
 		this.container.style.width = this.width + 'px';
 
@@ -70,8 +70,8 @@ var Level,
 			return  y;
 		},
 
-		createPlatform: function (type, seed) {
-			var platform = new Platform(type, seed);
+		createPlatform: function (width, type, seed) {
+			var platform = new Platform(width, type, seed);
 			this.container.appendChild(platform.container);
 
 			return platform;
@@ -113,7 +113,7 @@ var Level,
 			};
 
 
-			window.addEventListener('keydown', this.onKeyDownListener);
+			window.addEventListener('keydown', this.onKeyDownListener);	
 			window.addEventListener('keyup', this.onKeyUpListener);
 
 		},
@@ -136,7 +136,8 @@ var Level,
 
 			this.player.update(this, this.time - prevTime, {
 				MOVE_LEFT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_LEFT],
-				MOVE_RIGHT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_RIGHT]
+				MOVE_RIGHT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_RIGHT],
+				JUMP:  this.pressedKeys[KEYBOARD_MAPPING.JUMP]
 			});
 
 			this.container.style.webkitTransform = 'translate3d(' + (-this.player.position.x + 160) + 'px, ' + (this.player.position.y-this.height + 170) + 'px, 0px)';
