@@ -13,12 +13,17 @@ var Level,
 		this.player = undefined;
 
 		this.floor = undefined;
+		this.background = undefined;
 
 
 
 		this.createContainer();
+		this.createBackground();
 		this.createFloor();
 		this.createPlayer();
+
+		this.container.style.height = Math.max(this.floor.height, this.background.height) + 'px';
+
 		this.reset();
 
 	};
@@ -58,7 +63,13 @@ var Level,
 		createFloor: function () {
 			this.floor = new Platform('floor', this.rng.uniform());
 			this.container.appendChild(this.floor.container);
+		},
+
+		createBackground: function () {
+			this.background = new Platform('background', this.rng.uniform());
+			this.container.appendChild(this.background.container);
 		}
+
 
 
 	}

@@ -3,4 +3,6 @@
 	width: 16px;
 	height: 32px;
 	position: absolute;
+	bottom: 0;
+	left: -8px;
 }

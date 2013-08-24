@@ -1,7 +1,5 @@
-.level .floor {
+.level {
 	position: relative;
-}
-.level .floor canvas {
-	position: absolute;
-	bottom: 0;
+	background-color: #bcccff;
+
 }

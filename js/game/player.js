@@ -31,7 +31,7 @@ var Player,
 		},
 
 		update: function () {
-			this.container.style.webkitTransform = 'translate3d(-50%, -100%, 0) translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0)'
+			this.container.style.webkitTransform = 'translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)'
 		}
 	}
 

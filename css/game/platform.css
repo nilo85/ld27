@@ -1,0 +1,13 @@
+.platform {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.platform canvas {
+	position: absolute;
+	bottom: 0;
+}
+
+.platform.background {
+	opacity: 0.7;
+}

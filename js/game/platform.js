@@ -35,7 +35,7 @@ var Platform;
 		this.container = null;
 		this.parts = [];
 		this.canvases = [];
-
+		
 		this.create(type);
 	}
 
@@ -75,7 +75,7 @@ var Platform;
 			this.height = maxHeight;
 
 			this.container = document.createElement('div');
-			this.container.className = type;
+			this.container.className = 'platform ' + type;
 			this.container.style.height = maxHeight + 'px';
 
 			this.createCanvases();
