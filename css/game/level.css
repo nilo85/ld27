@@ -1,0 +1,7 @@
+.level .floor {
+	position: relative;
+}
+.level .floor canvas {
+	position: absolute;
+	bottom: 0;
+}
