@@ -46,13 +46,23 @@ var Game,
 		},
 
 		start: function () {
-			this.level.reset();
+			if(this.level !== undefined) {
+				this.level.reset();
+				this.level.start();
+			}
+		},
+
+		stop: function () {
+			if(this.level !== undefined) {
+				this.level.stop();
+			}
 		},
 
 		rescale: function () {
 			var scale = window.innerWidth / 320;
-			this.container.style.webkitTransform = 'scale3d(' + scale + ', ' + scale + ', 1)';
+			//this.container.style.webkitTransform = 'scale3d(' + scale + ', ' + scale + ', 1)';
 		},
+
 
 	};
 
