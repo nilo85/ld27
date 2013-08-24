@@ -1,6 +1,7 @@
-var Level;
+var Level,
+	Player;
 
-(function (RNG, Math, document){
+(function (RNG, Math, Number, document){
 	'use strict';
 
 	var formulas = {
@@ -27,19 +28,25 @@ var Level;
 		}
 	}
 
-	Level = function (seed) {
+	Level = function (seed, scale) {
 		this.rng = new RNG(seed);
 
-		this.container = null;
+		this.container = undefined;
+		this.player = undefined;
+
 		this.floor = {
 			container: null,
 			parts: [],
-			canvases: []
+			canvases: [],
 		};
-		this.length = 0;
+
+
 
 		this.createContainer();
 		this.createFloor();
+		this.createPlayer();
+		this.reset();
+
 	};
 
 	Level.prototype =  {
@@ -47,7 +54,48 @@ var Level;
 		createContainer: function () {
 			this.container = document.createElement('div');
 			this.container.className = 'level';
-			document.body.appendChild(this.container);
+		},
+
+		createPlayer: function () {
+			this.player = new Player();
+			this.container.appendChild(this.player.container);
+		},
+
+		reset: function () {
+			var startX = this.rng.random(50,200);
+
+			this.player.reset();
+			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE));
+		},
+
+		getY: function (x, fromY) {
+			var	testY,
+				y = Number.MIN_VALUE,
+				floorPart = this.getPart(this.floor, x);
+
+
+			if (floorPart !== undefined) {
+				testY = floorPart.formula.calculate(x, floorPart);
+				if(testY <= fromY) {
+					y = Math.max(y, testY);
+				}
+			}
+
+			return  y;
+		},
+
+		getPart: function (object, x) {
+			var i, part;
+
+			for (i = 0; i < object.parts.length; i++) {
+				part = object.parts[i];
+
+				if (x >= part.x && x < part.x + part.width) {
+					return part;
+				}
+			}
+
+			return undefined;
 		},
 
 		createFloor: function () {
@@ -123,7 +171,6 @@ var Level;
 				width = canvas.width = part.width;
 			
 			canvas.style.left = part.x + 'px';
-
 			ctx.beginPath();
 
 			ctx.moveTo(0, height);
@@ -146,4 +193,4 @@ var Level;
 		}
 	}
 
-})(RNG, Math, document);
+})(RNG, Math, Number, document);

@@ -1,0 +1,6 @@
+.player {
+	background-color: red;
+	width: 16px;
+	height: 32px;
+	position: absolute;
+}
