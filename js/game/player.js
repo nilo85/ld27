@@ -6,6 +6,11 @@ var Player,
 	
 	Player = function () {
 
+		this.position =  {
+			x: 0,
+			y: 0
+		}
+
 		this.container = undefined;
 		this.create();
 	};
@@ -21,9 +26,12 @@ var Player,
 		},
 
 		setPosition: function (x, y) {
-			// TODO: support other browsers
-			this.container.style.webkitTransform = 'translate3d(-50%, -100%, 0) translate3d(' + x + 'px, ' + -y + 'px, 0)'
-			this.container.style.transform = 'translate3d(-50%, -100%, 0) translate3d(' + x + 'px, ' + -y + 'px, 0)'
+			this.position = {x: x, y: y};
+			this.update();
+		},
+
+		update: function () {
+			this.container.style.webkitTransform = 'translate3d(-50%, -100%, 0) translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0)'
 		}
 	}
 
