@@ -1,17 +1,14 @@
-var Level,
+var globals,
+	Level,
 	Player,
 	Platform;
 
 (function (RNG, Math, Number, document, window, undefined){
 	'use strict';
 
-	var KEYBOARD_MAPPING = {
-		MOVE_LEFT: 37,
-		MOVE_RIGHT: 39,
-		JUMP: 32
-	};
+	Level = function (seed, easiness) {
 
-	Level = function (seed, scale) {
+		this.easiness = easiness;
 
 		this.rng = new RNG(seed);
 
@@ -26,7 +23,7 @@ var Level,
 		this.timeLeft = undefined;
 		this.viewportPosition = undefined;
 
-		this.width = this.rng.random(320*10,320*40);
+		this.width = this.calculateLevelWidth();
 
 		this.createContainer();
 		this.createSky();
@@ -52,6 +49,11 @@ var Level,
 
 	Level.prototype =  {
 
+		calculateLevelWidth: function () {
+			var possibleWidth = globals.RUN_SPEED * globals.START_TIME;
+
+			return (possibleWidth / this.easiness) + (globals.SCREEN_WIDTH*2);
+		},
 
 		createContainer: function () {
 			this.container = document.createElement('div');
@@ -89,12 +91,12 @@ var Level,
 		},
 
 		reset: function () {
-			var startX = this.rng.random(50,200);
+			var startX = globals.SCREEN_WIDTH * 1.2;
 
 			this.player.reset();
 			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE));			
 			this.timeMultiplier = 1;
-			this.timeLeft = 10000;
+			this.timeLeft = globals.START_TIME;
 			this.viewportPosition = {x: 0, y: 0};
 		},
 
@@ -191,9 +193,9 @@ var Level,
 
 		updatePlayer: function (deltaTime) {
 			this.player.update(this, deltaTime, {
-				MOVE_LEFT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_LEFT],
-				MOVE_RIGHT: this.pressedKeys[KEYBOARD_MAPPING.MOVE_RIGHT],
-				JUMP:  this.pressedKeys[KEYBOARD_MAPPING.JUMP]
+				MOVE_LEFT: 	this.pressedKeys[globals.KEYBOARD_MAPPING.MOVE_LEFT],
+				MOVE_RIGHT: this.pressedKeys[globals.KEYBOARD_MAPPING.MOVE_RIGHT],
+				JUMP:  		this.pressedKeys[globals.KEYBOARD_MAPPING.JUMP]
 			});
 		},
 
@@ -213,14 +215,14 @@ var Level,
 			centerX = this.player.position.x;
 			groundY = this.getY(centerX, Number.MAX_VALUE);
 
-			maxX = centerX - 160;
-			minX = centerX - 320;
+			maxX = centerX - globals.SCREEN_WIDTH / 4;
+			minX = centerX - globals.SCREEN_WIDTH / 2;
 
 			this.viewportPosition.x = Math.min(maxX, this.viewportPosition.x);
 			this.viewportPosition.x = Math.max(minX, this.viewportPosition.x);
 
-			maxY = this.player.position.y - 160;
-			minY = this.player.position.y - 360;
+			maxY = this.player.position.y - globals.SCREEN_HEIGHT / 3;
+			minY = this.player.position.y - globals.SCREEN_HEIGHT / 1.33;
 
 			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
 			this.viewportPosition.y = Math.max(minY, this.viewportPosition.y);

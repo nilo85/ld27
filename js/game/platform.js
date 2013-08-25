@@ -1,4 +1,5 @@
-var Platform;
+var globals,
+	Platform;
 
 (function (RNG, undefined){
 	'use strict';

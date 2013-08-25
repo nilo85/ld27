@@ -1,10 +1,26 @@
-var Game,
+var globals,
+	Game,
 	Level,
 	Player,
 	RNG;
 
 (function ($, window, document, undefined) {
 	'use strict';
+
+	var levels = [
+		{seed: 'level1', easiness: 2.0},
+		{seed: 'level2', easiness: 1.9},
+		{seed: 'level3', easiness: 1.8},
+		{seed: 'level4', easiness: 1.7},
+		{seed: 'level5', easiness: 1.6},
+		{seed: 'level6', easiness: 1.5},
+		{seed: 'level7', easiness: 1.4},
+		{seed: 'level8', easiness: 1.3},
+		{seed: 'level9', easiness: 1.2},
+		{seed: 'level10', easiness: 1.1},
+		{seed: 'level11', easiness: 1.0},
+		
+	];
 
 	Game = function () {
 
@@ -25,10 +41,6 @@ var Game,
 			this.container.className = 'game';
 			document.body.appendChild(this.container);
 
-			this.rescale();
-			$(window).resize(function () {
-				game.rescale();
-			});
 		},
 
 		unloadLevel: function () {
@@ -38,9 +50,9 @@ var Game,
 			}
 		},
 
-		loadLevel: function (seed) {
+		loadLevel: function (level) {
 			this.unloadLevel();
-			this.level = new Level(seed, this.scale);
+			this.level = new Level(levels[level].seed, levels[level].easiness);
 
 			this.container.appendChild(this.level.container);
 		},
@@ -58,10 +70,6 @@ var Game,
 			}
 		},
 
-		rescale: function () {
-			var scale = window.innerWidth / 640;
-		//	this.container.style.webkitTransform = 'scale3d(' + scale + ', ' + scale + ', 1)';
-		},
 
 
 	};
