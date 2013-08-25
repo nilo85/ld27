@@ -1,7 +1,7 @@
-(function (window, Math, undefined) {
+(function (document, window, Math, undefined) {
 	'use strict';
 
-	$(function () {
+	$(document).ready(function () {
 		var game = new Game();
 
 		game.loadLevel(1);
@@ -9,4 +9,4 @@
 		game.start();
 	});
 
-})(window, Math);
+})(document, window, Math);

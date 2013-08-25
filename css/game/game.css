@@ -13,3 +13,8 @@ html, body {
 	-webkit-transform: scale3d(1, 1, 1);
 	margin: auto;
 }
+
+.patterns {
+	position: absolute;
+	left: 1000px;
+}

@@ -32,15 +32,17 @@ var globals,
 		this.createLevelContainer();
 		this.createHud();
 
+		this.background3 = this.createPlatform(this.width, 'background', this.rng.uniform(), 650);
+		this.background2 = this.createPlatform(this.width, 'background', this.rng.uniform(), 600);
+		this.background1 = this.createPlatform(this.width, 'background', this.rng.uniform(), 550);
 		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
-		this.background = this.createPlatform(this.width, 'background', this.rng.uniform(), 650);
-
+		
 
 		this.createBomb();
 		this.createPlayer();
 		this.createGoal();
 
-		this.height = Math.max(this.floor.height, this.background.height);
+		this.height = Math.max(Math.max(Math.max(this.floor.height, this.background1.height), this.background2.height), this.background3.height);
 		
 		this.levelContainer.style.height = this.height + 'px';
 		this.levelContainer.style.width = this.width + 'px';

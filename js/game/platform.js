@@ -26,7 +26,7 @@ var globals,
 				return part.y - this.ampitude;
 			}
 		}
-	}
+	};
 
 
 	Platform = function (width, type, seed, baseHeight) {
@@ -108,15 +108,20 @@ var globals,
 				part,
 				canvas = this.canvas = document.createElement('canvas'),
 				ctx = canvas.getContext('2d'),
+				dirtPattern,
+				grassPattern,
 
-				height = canvas.height = part.formula.getMax(part),
+				lineWidth = 16,
+
+				height = canvas.height = part.formula.getMax(part) + (lineWidth/2),
 				width = canvas.width = part.width; 
 			
 			canvas.style.left = part.x + 'px';
 
 			ctx.beginPath();
 
-			ctx.moveTo(0, height);
+			ctx.moveTo(-1000, height);
+			ctx.lineTo(-1000, part.formula.calculate(part.x, part));
 
 
 			for (x = part.x; x <= part.x + part.width; x++) {
@@ -124,12 +129,27 @@ var globals,
 
 				ctx.lineTo(x - part.x, height-y);
 			}
-
-			ctx.lineTo(width+1, height);
-			ctx.closePath();
+			ctx.lineTo(width+1000, part.formula.calculate(part.x+part.width, part));
 			
-			ctx.fillStyle = 'green';
-			ctx.fill();
+			ctx.lineTo(width+lineWidth, height);
+			ctx.closePath();
+
+			grassPattern = ctx.createPattern(document.getElementById('pattern-grass'), 'repeat');			
+			dirtPattern = ctx.createPattern(document.getElementById('pattern-dirt'), 'repeat');			
+
+			
+			if(this.type === 'floor') {
+				ctx.fillStyle = dirtPattern;
+				ctx.fill();
+
+				ctx.lineWidth = lineWidth;
+				ctx.strokeStyle = grassPattern;
+				ctx.stroke();
+			} else {
+				ctx.fillStyle = grassPattern;
+				ctx.fill();				
+			}
+			
 			
 
 			return canvas;
