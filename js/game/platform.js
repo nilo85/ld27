@@ -106,12 +106,10 @@ var Platform;
 				canvas = this.canvas = document.createElement('canvas'),
 				ctx = canvas.getContext('2d'),
 
-				height = canvas.height = part.formula.getMax(part) * 2,
-				width = canvas.width = part.width * 2; 
+				height = canvas.height = part.formula.getMax(part),
+				width = canvas.width = part.width; 
 			
 			canvas.style.left = part.x + 'px';
-			canvas.style.width = width / 2 + 'px';
-			canvas.style.height = height / 2 + 'px';
 
 			ctx.beginPath();
 
@@ -121,7 +119,7 @@ var Platform;
 			for (x = part.x; x <= part.x + part.width; x++) {
 				y = part.formula.calculate(x, part);
 
-				ctx.lineTo((x - part.x) * 2, height-(y*2));
+				ctx.lineTo(x - part.x, height-y);
 			}
 
 			ctx.lineTo(width+1, height);

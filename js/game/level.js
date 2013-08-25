@@ -213,14 +213,14 @@ var Level,
 			centerX = this.player.position.x;
 			groundY = this.getY(centerX, Number.MAX_VALUE);
 
-			maxX = centerX - 80;
-			minX = centerX - 160;
+			maxX = centerX - 160;
+			minX = centerX - 320;
 
 			this.viewportPosition.x = Math.min(maxX, this.viewportPosition.x);
 			this.viewportPosition.x = Math.max(minX, this.viewportPosition.x);
 
-			maxY = this.player.position.y - 80;
-			minY = this.player.position.y - 180;
+			maxY = this.player.position.y - 160;
+			minY = this.player.position.y - 360;
 
 			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
 			this.viewportPosition.y = Math.max(minY, this.viewportPosition.y);
