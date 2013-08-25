@@ -5,7 +5,7 @@ var globals,
 
 (function (RNG, Math, Number, document, window, undefined){
 	'use strict';
-var counter = 0;
+
 	Level = function (seed, easiness, name) {
 		
 		this.easiness = easiness;

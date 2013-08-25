@@ -4,6 +4,7 @@ var globals = {
 		MOVE_RIGHT: 39,
 		JUMP: 32
 	},
+
 	GRAVITY: 0.004,
 	JUMP_SPEED: 1,
 	RUN_ACCELERATION: 0.1,
