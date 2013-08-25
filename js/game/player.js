@@ -65,16 +65,19 @@ var Player,
 
 			this.speed.x = Math.max(Math.min(this.speed.x, 1), -1);
 
-				x = prevX + this.speed.x * time,
-				y = prevY + this.speed.y * time,
-				groundY = level.getY(x, 999999);
-
-
+			x = prevX + this.speed.x * time,
+			y = prevY + this.speed.y * time,
+			groundY = level.getY(x, 999999);
 
 
 			this.position.x = x; 
-			this.position.y = Math.max(y, groundY);
 
+			if(y < groundY) {
+				this.speed.y = 0;
+				this.position.y = groundY;
+			} else {
+				this.position.y = y;
+			}
 
 
 			this.container.style.webkitTransform = 'translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)'

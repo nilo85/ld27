@@ -1,5 +1,19 @@
+.hud {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.hud .clock {
+	position: absolute;
+	left: 5px;
+	right: 5px;
+	color: red;	
+}
+
 .level {
 	position: relative;
 	background-color: #bcccff;
-
 }
