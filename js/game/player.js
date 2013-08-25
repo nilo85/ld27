@@ -39,16 +39,17 @@ var globals,
 			this.update();
 		},
 
-		update: function (level, time, state) {
+		update: function (level, time, haveAdrenalin, state) {
 			if (isNaN(time)) {
 				return;
 			}
 
-			var transform = '';
-
+			
 			this.totalTime += time;
 
-			var prevX = this.position.x,
+			var maxSpeed = haveAdrenalin ? globals.RUN_SPEED * 2 : globals.RUN_SPEED,
+				transform = '',
+				prevX = this.position.x,
 				prevY = this.position.y,
 				prevGroundY = level.getY(prevX, Number.MAX_VALUE),
 				x,
@@ -76,7 +77,7 @@ var globals,
 				this.speed.x = Math.min(this.speed.x, 0);
 			}
 
-			this.speed.x = Math.max(Math.min(this.speed.x, globals.RUN_SPEED), -globals.RUN_SPEED);
+			this.speed.x = Math.max(Math.min(this.speed.x, maxSpeed), -maxSpeed);
 
 			x = prevX + this.speed.x * time,
 			y = prevY + this.speed.y * time,

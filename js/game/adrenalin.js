@@ -1,9 +1,11 @@
 var globals,
-	Bomb;
-(function (document, undefined) {
+	Adrenalin;
+
+(function () {
 	'use strict';
 
-	Bomb = function (x, y) {
+
+	Adrenalin = function (x, y) {
 		this.container = undefined;
 		this.position = {x: x, y: y};
 
@@ -12,10 +14,10 @@ var globals,
 		this.create();
 	};
 
-	Bomb.prototype = {
+	Adrenalin.prototype = {
 		create: function () {
 			this.container = document.createElement('div');
-			this.container.className = 'bomb';
+			this.container.className = 'adrenalin';
 			this.update();
 		},
 
@@ -26,4 +28,4 @@ var globals,
 
 	};
 
-})(document);
+})();

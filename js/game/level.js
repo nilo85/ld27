@@ -6,9 +6,10 @@ var globals,
 (function (RNG, Math, Number, document, window, undefined){
 	'use strict';
 var counter = 0;
-	Level = function (seed, easiness) {
+	Level = function (seed, easiness, name) {
 		
 		this.easiness = easiness;
+		this.name = name;
 
 		this.rng = new RNG(seed);
 
@@ -17,16 +18,27 @@ var counter = 0;
 		this.hudContainer = undefined;
 
 		this.hudClock = undefined; 
-		this.hudRunBubble = undefined; 
+		this.hudClockLevel = undefined;
+		this.hudClockLevelBar = undefined;
+
+		this.hudAdrenalinLevel = undefined;
+		this.hudAdrenalinLevelBar = undefined;
+		this.hudAdrenalinLevelBarProgress = undefined;
+
+		this.hudMessage = undefined; 
 
 		this.player = undefined;
 		this.bomb = undefined;
 		this.goal = undefined;
-		this.timeMultiplier = undefined;
-		this.timeLeft = undefined;
+		
+		this.bombTimeLeft = undefined;
+		this.adrenalinTimeLeft = undefined;
+		this.messageTimeLeft = undefined;
+
 		this.score = undefined;
 		this.viewportPosition = undefined;
 		this.intervalId = undefined;
+		this.hasFailed = undefined;
 
 		this.width = this.calculateLevelWidth();
 
@@ -41,6 +53,7 @@ var counter = 0;
 		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
 		
 		this.trees = this.createTrees();		
+		this.adrenalinShots = this.createAdrenalinShots();
 		
 		this.createPlayer();
 		this.badgers = this.createBadgers();
@@ -75,7 +88,29 @@ var counter = 0;
 		calculateLevelWidth: function () {
 			var possibleWidth = globals.RUN_SPEED * globals.START_TIME;
 
-			return (possibleWidth / this.easiness) + (globals.SCREEN_WIDTH*2);
+			return (possibleWidth / this.easiness * 2) + (globals.SCREEN_WIDTH*2);
+		},
+
+		createAdrenalinShots: function () {
+			var adrenalinShots = [],
+				adrenalin,
+				offset = globals.SCREEN_WIDTH * 1.4,
+				y,
+				x = this.rng.random(offset, offset + (globals.SCREEN_WIDTH * 2));	
+
+			while (x < this.width - offset) {
+
+				y = this.getY(x, Number.MAX_VALUE) + this.rng.random(10, 200);
+
+				adrenalin = new Adrenalin(x, y, this.rng.uniform());
+				this.levelContainer.appendChild(adrenalin.container);
+
+				adrenalinShots.push(adrenalin);
+
+				x += this.rng.random(globals.SCREEN_WIDTH * 2, globals.SCREEN_WIDTH * 8);	
+			}
+
+			return adrenalinShots;
 		},
 
 		createBadgers: function () {
@@ -154,14 +189,25 @@ var counter = 0;
 			this.hudContainer.className = 'hud';
 			this.container.appendChild(this.hudContainer);
 
-
 			this.hudClock = document.createElement('div');
 			this.hudClock.className = 'clock';
 			this.hudContainer.appendChild(this.hudClock);
 
-			this.hudRunBubble = document.createElement('div');
-			this.hudRunBubble.className = 'runBubble';
-			this.hudContainer.appendChild(this.hudRunBubble);
+			this.hudClockLevel = document.createElement('div');
+			this.hudClock.appendChild(this.hudClockLevel);
+
+			this.hudClockLevelBar = document.createElement('div');
+			this.hudClockLevel.appendChild(this.hudClockLevelBar);
+
+			this.hudAdrenalinLevel = document.createElement('div');
+			this.hudAdrenalinLevel.className = 'adrenalin-level';
+			this.hudContainer.appendChild(this.hudAdrenalinLevel);
+
+			this.hudAdrenalinLevelBar = document.createElement('div');
+			this.hudAdrenalinLevel.appendChild(this.hudAdrenalinLevelBar);
+
+			this.hudAdrenalinLevelBarProgress = document.createElement('div');
+			this.hudAdrenalinLevelBar.appendChild(this.hudAdrenalinLevelBarProgress);
 
 		},
 
@@ -181,10 +227,32 @@ var counter = 0;
 
 			this.player.reset();
 			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE));			
-			this.timeMultiplier = 1;
-			this.timeLeft = globals.START_TIME;
+			this.bombTimeLeft = globals.START_TIME;
+			this.adrenalinTimeLeft = 0;
+			this.messageTimeLeft = 0;
+		
 			this.viewportPosition = {x: 0, y: 0};
 			this.score = 0;
+			this.hasFailed = false;
+		},
+
+		showMessage: function (message) {
+			this.hideMessage();
+
+			this.messageTimeLeft = globals.MESSAGE_TIME;
+
+			this.hudMessage = document.createElement('div');
+			this.hudMessage.className = 'message';
+			this.hudMessage.appendChild(document.createTextNode(message));
+			this.hudContainer.appendChild(this.hudMessage);
+
+		},
+
+		hideMessage: function () {
+			if (this.hudMessage !== undefined) {
+				this.hudContainer.removeChild(this.hudMessage);
+				this.hudMessage = undefined;
+			}
 		},
 
 		getY: function (x, fromY) {
@@ -215,6 +283,8 @@ var counter = 0;
 				level.update();
 			}, 16);
 			this.registerKeyListeners();
+
+			this.showMessage(this.name + ': RUN!!!');
 		},
 
 		stop: function() {
@@ -260,7 +330,17 @@ var counter = 0;
 			}
 		},
 
-		fail: function (message) {
+		fail: function (message, delay) {
+			var level = this;
+
+			this.hasFailed = true;
+			if(delay !== undefined) {
+				window.setTimeout(function () {
+					level.fail(message);
+				}, delay);
+				return;
+			}
+
 			this.stop();
 			if (this.onFailure !== undefined) {
 				this.onFailure(this.score, message);
@@ -275,38 +355,85 @@ var counter = 0;
 
 			this.time = Date.now();
 			
-			deltaTime = (this.time - prevTime) * this.timeMultiplier;
 
-			this.timeLeft -= deltaTime;
 
-			if(this.hudRunBubble !== undefined && this.timeLeft < globals.START_TIME - 500) {
-				this.hudContainer.removeChild(this.hudRunBubble);
-				this.hudRunBubble = undefined;
+			deltaTime = (this.time - prevTime);
+
+			if (this.adrenalinTimeLeft > 0) {
+				deltaTime /= 2;
 			}
 
+			this.bombTimeLeft -= deltaTime;
+			this.adrenalinTimeLeft -= deltaTime;
+			this.messageTimeLeft -= deltaTime;
+
+			if (this.adrenalinTimeLeft < 0) {
+				this.adrenalinTimeLeft = 0;
+			}
+
+			if (this.hudMessage !== undefined && this.messageTimeLeft < 0) {
+				this.hideMessage();
+			}
+
+			if (this.hasFailed) {
+				return;
+			}
+
+		
 			if(this.player.position.x === this.goal.position.x) {
 				this.complete();
 				return;
 			}
 
-			if(this.timeLeft < 0) {
-				this.bomb.explode();
-				window.setTimeout(function () {
-					level.fail('The bomb exploaded on you! You need to be faster.');
-				}, 4000);
+			if(this.bombTimeLeft < 0) {
+				this.container.className = 'viewport exploaded';
+				level.fail('You did not reach the safe zone before the bomb exploaded, please try it again, but this time, please HURRY UP!', 2000);
 				return;
 			}
 
 			if (this.isPlayerCollidingWithBadger()) {
-				level.fail('You ran into an angry badger, avoid them!');
+				level.fail('You ran into an angry rabies badger, avoid them!');
 				return;
 			}
 
 			this.updatePlayer(deltaTime);
+
+			this.consumeCollidingAdrenalin();
+
 			this.updateClock(deltaTime);
+			this.updateAdrenalin(deltaTime);
 			this.updateLevelTranslation(deltaTime);
 
 
+		},
+
+		consumeCollidingAdrenalin: function () {
+			var i,
+				adrenalin,
+				hitboxWidth = 53,
+				hitboxHeight = 68;
+
+			for (i = 0; i < this.adrenalinShots.length; i++) {
+				adrenalin = this.adrenalinShots[i];
+
+				if(
+					adrenalin.position.x - (hitboxWidth/2)  <= this.player.position.x &&
+					adrenalin.position.x + (hitboxWidth/2)  >= this.player.position.x &&
+
+					adrenalin.position.y >= this.player.position.y &&
+					adrenalin.position.y - hitboxHeight <= this.player.position.y) {
+
+					this.adrenalinTimeLeft = globals.ADRENALIN_TIME;
+
+					this.adrenalinShots.splice(i, 1);
+					this.levelContainer.removeChild(adrenalin.container);
+
+					this.showMessage('Adrenalin makes time slow and movement fast, gravity is untouched, YEAHAA!');
+
+					return;
+				}
+
+			}	
 		},
 
 		isPlayerCollidingWithBadger: function () {
@@ -319,16 +446,12 @@ var counter = 0;
 			for (i = 0; i < this.badgers.length; i++) {
 				badger = this.badgers[i];
 
-				if(this.timeLeft < 100) {
-					debugger;
-				}
-
 				if(
-					badger.position.y + badgetHitboxHeight >= this.player.position.y &&
-					badger.position.y <= this.player.position.y &&
-
 					badger.position.x - (badgetHitboxWidth/2)  <= this.player.position.x &&
-					badger.position.x + (badgetHitboxWidth/2)  >= this.player.position.x  ) {
+					badger.position.x + (badgetHitboxWidth/2)  >= this.player.position.x &&
+
+					badger.position.y + badgetHitboxHeight >= this.player.position.y &&
+					badger.position.y <= this.player.position.y) {
 
 					return true;
 				}
@@ -338,7 +461,7 @@ var counter = 0;
 		},
 
 		updatePlayer: function (deltaTime) {
-			this.player.update(this, deltaTime, {
+			this.player.update(this, deltaTime, this.adrenalinTimeLeft > 0, {
 				MOVE_LEFT: 	this.pressedKeys[globals.KEYBOARD_MAPPING.MOVE_LEFT],
 				MOVE_RIGHT: this.pressedKeys[globals.KEYBOARD_MAPPING.MOVE_RIGHT],
 				JUMP:  		this.pressedKeys[globals.KEYBOARD_MAPPING.JUMP]
@@ -346,7 +469,10 @@ var counter = 0;
 		},
 
 		updateClock: function (deltaTime) {
-			this.hudClock.innerHTML = (this.timeLeft/1000).toFixed(1);			
+			this.hudClockLevelBar.style.width = (this.bombTimeLeft / globals.START_TIME * 100).toFixed(0) + '%';			
+		},
+		updateAdrenalin: function (deltaTime) {
+			this.hudAdrenalinLevelBarProgress.style.width = (this.adrenalinTimeLeft / globals.ADRENALIN_TIME * 100).toFixed(0) + '%';			
 		},
 
 		updateLevelTranslation: function (deltaTime) {

@@ -1,0 +1,26 @@
+.gameover,
+.gamecompleted {
+	height: 100%;
+	background-position: center 50px;
+	background-repeat: no-repeat;
+	color: white;
+}
+.gameover {
+	background-image: url(../../img/gameover.png);
+}
+
+.gamecompleted {
+	background-image: url(../../img/star.png);
+}
+
+.gameover > div,
+.gamecompleted > div {
+	text-align: center;
+	margin: 20px;
+}
+
+.gameover > div:first-of-type,
+.gamecompleted > div:first-of-type {
+	padding-top: 320px;
+}
+}

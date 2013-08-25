@@ -31,14 +31,16 @@
 		background-position: 0px -42px;		
 	}
 }
-.bomb.exploaded {
-	background-image: none;
-	background-color: rgba(255, 255, 255, 0.5);
+.exploaded .bomb {
+	display: none;
+	
+
+	/* background-color: rgba(255, 255, 255, 0.5);
 	opacity: 0.4;
-	width: 640px;
-	height: 640px;
-	left: -320px;
-	bottom:  -320px;
+	width: 64px;
+	height: 64px;
+	left: -32px;
+	bottom:  -32px;
 
 	border-radius: 50%;
 	border: solid 10px white;
@@ -46,7 +48,7 @@
 
 	-webkit-animation: bomb-exploation 4s;
 	animation: bomb-exploation 4s;
-
+*/
 }
 
 @-webkit-keyframes bomb-exploation {

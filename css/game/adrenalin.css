@@ -1,0 +1,32 @@
+.adrenalin {
+	position: absolute;
+
+	width: 22px;
+	height: 55px;
+	background-image: url(../../img/adrenalin.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	bottom: -17px;
+	left: -11px; 
+
+	-webkit-animation: adrenalin 1s ease-in-out infinite alternate;
+	animation: adrenalin 1s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes adrenalin {
+	from {
+		margin-top: left top;
+	}
+	to {
+		background-position: left bottom;
+	}
+}
+@keyframes adrenalin {
+	from {
+		background-position: left top;
+	}
+	to {
+		background-position: left bottom;
+	}
+}
