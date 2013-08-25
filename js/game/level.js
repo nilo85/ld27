@@ -37,6 +37,7 @@ var globals,
 		this.background1 = this.createPlatform(this.width, 'background', this.rng.uniform(), 550);
 		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
 		
+		this.trees = this.createTrees();		
 
 		this.createBomb();
 		this.createPlayer();
@@ -59,6 +60,24 @@ var globals,
 			var possibleWidth = globals.RUN_SPEED * globals.START_TIME;
 
 			return (possibleWidth / this.easiness) + (globals.SCREEN_WIDTH*2);
+		},
+
+		createTrees: function () {
+			var	trees = [],
+				tree,
+				y,
+				x = this.rng.random(globals.SCREEN_WIDTH / 3, globals.SCREEN_WIDTH * 2);
+
+			while (x < this.width) {
+
+				y = this.getY(x, Number.MAX_VALUE);
+
+				tree = new Tree(x, y);
+				this.levelContainer.appendChild(tree.container);
+				trees.push(tree);
+
+				x+= this.rng.random(globals.SCREEN_WIDTH / 3, globals.SCREEN_WIDTH * 2);
+			}
 		},
 
 		createBomb: function () {
