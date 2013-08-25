@@ -38,7 +38,8 @@ var globals,
 		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
 		
 		this.trees = this.createTrees();		
-
+		
+		
 		this.createBomb();
 		this.createPlayer();
 		this.createGoal();
@@ -73,7 +74,7 @@ var globals,
 				y = this.getY(x, Number.MAX_VALUE);
 
 				tree = new Tree(x, y);
-				this.levelContainer.appendChild(tree.container);
+				this.levelContainer.insertBefore(tree.container, this.floor.container);
 				trees.push(tree);
 
 				x+= this.rng.random(globals.SCREEN_WIDTH / 3, globals.SCREEN_WIDTH * 2);
