@@ -1,0 +1,27 @@
+.goal {
+	position: absolute;
+	width: 56px;
+	height: 93px;
+	left: -28px;
+	bottom: -3px;
+	background-image: url(../../img/goal.png);
+	animation: goal 0.5s steps(3, end) infinite;
+	-webkit-animation: goal 0.5s steps(3, end) infinite;
+}
+
+@-webkit-keyframes goal {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -279px;		
+	}
+}
+@keyframes goal {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -279px;		
+	}
+}

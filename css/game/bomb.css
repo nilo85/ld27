@@ -1,0 +1,29 @@
+.bomb {
+	position: absolute;
+	width: 42px;
+	height: 21px;
+	background-image: url(../../img/bomb.png);
+
+	bottom: 0;
+	left: -21px;
+
+	-webkit-animation: bomb 2s steps(2, end) infinite;
+	animation: bomb 2s steps(2, end) infinite;
+
+}
+
+@-webkit-keyframes bomb {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -42px;		
+	}
+}
+@keyframes bomb {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -42px;		
+	}

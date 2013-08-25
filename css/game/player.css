@@ -1,8 +1,42 @@
 .player {
-	background-color: red;
-	width: 32px;
-	height: 64px;
+	width: 53px;
+	height: 68px;
 	position: absolute;
 	bottom: 0;
-	left: -16px;
+	left: -26px;
+	background-image: url(../../img/player.png);
+
+	-webkit-transform-origin: center center;
+	transform-origin: center center;
+
+	-webkit-animation: player-standing .5s steps(6, end) infinite;
+	animation: player-standing .5s steps(6, end) infinite;
+}
+@-webkit-keyframes player-standing {
+	from, to {
+		background-position: -106px;
+	}
+}
+@keyframes player-standing {
+	from, to {
+		background-position: -106px;
+	}
+}
+
+
+@-webkit-keyframes player-walking {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -318px;		
+	}
+}
+@keyframes player-walking {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -318px;		
+	}
 }

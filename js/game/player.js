@@ -2,10 +2,12 @@ var globals,
 	Player,
 	RNG;
 
-(function (RNG, Math, document){
+(function (RNG, Math, document, Number, undefined){
 	'use strict';
 	
 	Player = function () {
+
+		this.totalTime = 0;
 
 		this.position =  {
 			x: 0,
@@ -15,6 +17,8 @@ var globals,
 			x: 0,
 			y: 0
 		}
+
+
 
 		this.container = undefined;
 		this.create();
@@ -40,9 +44,13 @@ var globals,
 				return;
 			}
 
+			var transform = '';
+
+			this.totalTime += time;
+
 			var prevX = this.position.x,
 				prevY = this.position.y,
-				prevGroundY = level.getY(prevX, 999999),
+				prevGroundY = level.getY(prevX, Number.MAX_VALUE),
 				x,
 				y,
 				groundY;
@@ -68,7 +76,7 @@ var globals,
 
 			x = prevX + this.speed.x * time,
 			y = prevY + this.speed.y * time,
-			groundY = level.getY(x, 999999);
+			groundY = level.getY(x, Number.MAX_VALUE);
 
 
 			this.position.x = Math.min(level.width - globals.SCREEN_WIDTH, Math.max(globals.SCREEN_WIDTH, x)); 
@@ -80,10 +88,22 @@ var globals,
 				this.position.y = y;
 			}
 
+			if (this.speed.x !== 0) {
+				this.container.style.webkitAnimationName = 'player-walking';
+			} else {
+				this.container.style.webkitAnimationName = 'player-standing';
+			}
+			
+			transform += ' translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)';
+		
+			if (this.speed.x < 0) {
+				transform += ' scaleX(-1)';
+			}
 
-			this.container.style.webkitTransform = 'translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)'
-		},
+			this.container.style.webkitTransform = transform;
+
+		}
 
 	}
 
-})(RNG, Math, document);
+})(RNG, Math, document, Number);

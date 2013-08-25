@@ -19,6 +19,8 @@ var globals,
 		this.hudClock = undefined; 
 
 		this.player = undefined;
+		this.bomb = undefined;
+		this.goal = undefined;
 		this.timeMultiplier = undefined;
 		this.timeLeft = undefined;
 		this.viewportPosition = undefined;
@@ -34,7 +36,9 @@ var globals,
 		this.background = this.createPlatform(this.width, 'background', this.rng.uniform(), 650);
 
 
+		this.createBomb();
 		this.createPlayer();
+		this.createGoal();
 
 		this.height = Math.max(this.floor.height, this.background.height);
 		
@@ -53,6 +57,22 @@ var globals,
 			var possibleWidth = globals.RUN_SPEED * globals.START_TIME;
 
 			return (possibleWidth / this.easiness) + (globals.SCREEN_WIDTH*2);
+		},
+
+		createBomb: function () {
+			var bombX = globals.SCREEN_WIDTH,
+				bombY = this.getY(bombX, Number.MAX_VALUE);
+
+			this.bomb = new Bomb(bombX, bombY);
+			this.levelContainer.appendChild(this.bomb.container);
+		},
+
+		createGoal: function () {
+			var goalX = this.width - globals.SCREEN_WIDTH,
+				goalY = this.getY(goalX, Number.MAX_VALUE);
+
+			this.goal = new Goal(goalX, goalY);
+			this.levelContainer.appendChild(this.goal.container);
 		},
 
 		createContainer: function () {
