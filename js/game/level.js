@@ -17,6 +17,7 @@ var counter = 0;
 		this.hudContainer = undefined;
 
 		this.hudClock = undefined; 
+		this.hudRunBubble = undefined; 
 
 		this.player = undefined;
 		this.bomb = undefined;
@@ -132,6 +133,11 @@ var counter = 0;
 			this.hudClock = document.createElement('div');
 			this.hudClock.className = 'clock';
 			this.hudContainer.appendChild(this.hudClock);
+
+			this.hudRunBubble = document.createElement('div');
+			this.hudRunBubble.className = 'runBubble';
+			this.hudContainer.appendChild(this.hudRunBubble);
+
 		},
 
 		createSky: function () {
@@ -228,13 +234,16 @@ var counter = 0;
 				deltaTime,
 				level = this;
 
-				console.log('update', this.id);
-
 			this.time = Date.now();
 			
 			deltaTime = (this.time - prevTime) * this.timeMultiplier;
 
 			this.timeLeft -= deltaTime;
+
+			if(this.hudRunBubble !== undefined && this.timeLeft < globals.START_TIME - 500) {
+				this.hudContainer.removeChild(this.hudRunBubble);
+				this.hudRunBubble = undefined;
+			}
 
 			if(this.player.position.x === this.goal.position.x) {
 				level.stop();
@@ -297,8 +306,8 @@ var counter = 0;
 			maxY = this.player.position.y - globals.SCREEN_HEIGHT / 3;
 			minY = this.player.position.y - globals.SCREEN_HEIGHT / 1.33;
 
-			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
 			this.viewportPosition.y = Math.max(minY, this.viewportPosition.y);
+			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
 
 
 			this.levelContainer.style.webkitTransform = this.levelContainer.style.transform = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			

@@ -13,6 +13,17 @@
 	color: red;	
 }
 
+.hud .runBubble {
+	position: absolute;
+	width: 68px;
+	height: 52px;
+	background-image: url(../../img/run.png);
+	top: -6px;
+	left: 331px;
+}
+
+
+
 .level {
 	position: absolute;
 	bottom: 0;

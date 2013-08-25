@@ -60,13 +60,17 @@ var globals,
 			} else {
 				this.speed.y -= globals.GRAVITY * time;
 			}
+
 			if (state.MOVE_LEFT) {
 				this.speed.x -= 0.1*time;
+			
 			} else if (state.MOVE_RIGHT) {
 				this.speed.x += globals.RUN_ACCELERATION * time;
+			
 			} else if (this.speed.x > 0) {
 				this.speed.x -= globals.STOP_ACCELERATION * time;
 				this.speed.x = Math.max(this.speed.x, 0);
+			
 			} else if (this.speed.x < 0) {
 				this.speed.x += globals.STOP_ACCELERATION * time;
 				this.speed.x = Math.min(this.speed.x, 0);
