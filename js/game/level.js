@@ -32,9 +32,9 @@ var globals,
 		this.createLevelContainer();
 		this.createHud();
 
-		this.background3 = this.createPlatform(this.width, 'background', this.rng.uniform(), 650);
-		this.background2 = this.createPlatform(this.width, 'background', this.rng.uniform(), 600);
-		this.background1 = this.createPlatform(this.width, 'background', this.rng.uniform(), 550);
+		this.background3 = this.createPlatform(this.width, 'background3', this.rng.uniform(), 650);
+		this.background2 = this.createPlatform(this.width, 'background2', this.rng.uniform(), 600);
+		this.background1 = this.createPlatform(this.width, 'background1', this.rng.uniform(), 550);
 		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
 		
 		this.trees = this.createTrees();		
@@ -166,7 +166,6 @@ var globals,
 
 			this.stop();
 
-			window.addEventListener();
 			window.setInterval(function () {
 				level.update();
 			}, 16);
@@ -220,12 +219,14 @@ var globals,
 
 			this.timeLeft -= deltaTime;
 
-/*
+
 			if(this.timeLeft < 0) {
-				this.reset();
+				
+				//this.reset();
+				this.bomb.explode();
 				return;
 			}
-*/
+
 
 			this.updatePlayer(deltaTime);
 			this.updateClock(deltaTime);
@@ -270,7 +271,7 @@ var globals,
 			this.viewportPosition.y = Math.max(minY, this.viewportPosition.y);
 
 
-			this.levelContainer.style.webkitTransform = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			
+			this.levelContainer.style.webkitTransform = this.levelContainer.style.transform = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			
 		}
 
 	}

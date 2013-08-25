@@ -89,9 +89,9 @@ var globals,
 			}
 
 			if (this.speed.x !== 0) {
-				this.container.style.webkitAnimationName = 'player-walking';
+				this.container.style.webkitAnimationName = this.container.style.animationName = 'player-walking';
 			} else {
-				this.container.style.webkitAnimationName = 'player-standing';
+				this.container.style.webkitAnimationName = this.container.style.animationName = 'player-standing';
 			}
 			
 			transform += ' translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)';
@@ -100,7 +100,7 @@ var globals,
 				transform += ' scaleX(-1)';
 			}
 
-			this.container.style.webkitTransform = transform;
+			this.container.style.webkitTransform = this.container.style.transform = transform;
 
 		}
 

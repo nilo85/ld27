@@ -7,9 +7,9 @@
 	background-image: url(../../img/player.png);
 
 	-webkit-transform-origin: center center;
-	transform-origin: center center;
-
 	-webkit-animation: player-standing .5s steps(6, end) infinite;
+
+	transform-origin: center center;
 	animation: player-standing .5s steps(6, end) infinite;
 }
 @-webkit-keyframes player-standing {

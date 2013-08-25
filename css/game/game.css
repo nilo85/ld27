@@ -11,6 +11,8 @@ html, body {
 	overflow: hidden;
 	-webkit-transform-origin: left top;
 	-webkit-transform: scale3d(1, 1, 1);
+	transform-origin: left top;
+	transform: scale3d(1, 1, 1);
 	margin: auto;
 }
 

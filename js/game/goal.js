@@ -18,7 +18,7 @@ var globals,
 		},
 
 		update: function () {
-			this.container.style.webkitTransform = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
+			this.container.style.webkitTransform = this.container.style.transform = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
 		}
 	};
 

@@ -9,6 +9,9 @@
 }
 
 
-.platform.background {
+.platform.background1,
+.platform.background2,
+.platform.background3 {
 	opacity: 0.5;
 }
+
