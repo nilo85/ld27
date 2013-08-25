@@ -9,7 +9,7 @@ var globals,
 
 	var levels = [
 		{name: 'Level 1', seed: 'level1', easiness: 5},
-		/*{name: 'Level 2', seed: 'level2', easiness: 4.5},
+		{name: 'Level 2', seed: 'level2', easiness: 4.5},
 		{name: 'Level 3', seed: 'level3', easiness: 4},
 		{name: 'Level 4', seed: 'level4', easiness: 3.5},
 		{name: 'Level 5', seed: 'level5', easiness: 3},
@@ -17,7 +17,7 @@ var globals,
 		{name: 'Level 7', seed: 'level7', easiness: 2},
 		{name: 'Level 8', seed: 'level8', easiness: 1.5},
 		{name: 'Level 9', seed: 'level9', easiness: 1}
-		*/
+		
 	];
 
 	Game = function () {
