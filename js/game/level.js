@@ -80,7 +80,6 @@ var Level,
 		reset: function () {
 			var startX = this.rng.random(50,200);
 
-
 			this.player.reset();
 			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE));			
 			this.timeMultiplier = 1;
@@ -164,6 +163,11 @@ var Level,
 			deltaTime = (this.time - prevTime) * this.timeMultiplier;
 
 			this.timeLeft -= deltaTime;
+
+			if(this.timeLeft < 0) {
+				this.reset();
+				return;
+			}
 
 
 			this.updatePlayer(deltaTime);
