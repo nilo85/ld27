@@ -42,9 +42,10 @@ var counter = 0;
 		
 		this.trees = this.createTrees();		
 		
-		
 		this.createBomb();
 		this.createPlayer();
+		this.badgers = this.createBadgers();
+	
 		this.createGoal();
 
 		this.height = Math.max(Math.max(Math.max(this.floor.height, this.background1.height), this.background2.height), this.background3.height);
@@ -77,6 +78,28 @@ var counter = 0;
 			return (possibleWidth / this.easiness) + (globals.SCREEN_WIDTH*2);
 		},
 
+		createBadgers: function () {
+			var badgers = [],
+				badger,
+				offset = globals.SCREEN_WIDTH * 1.4,
+				y,
+				x = this.rng.random(offset, offset + (globals.SCREEN_WIDTH * this.easiness/2));	
+
+			while (x < this.width - offset) {
+
+				y = this.getY(x, Number.MAX_VALUE);
+
+				badger = new Badger(x, y, 0);
+				this.levelContainer.appendChild(badger.container);
+
+				badgers.push(badger);
+
+				x += this.rng.random(offset, offset + (globals.SCREEN_WIDTH * this.easiness/2));	
+			}
+
+			return badgers;
+		},
+
 		createTrees: function () {
 			var	trees = [],
 				tree,
@@ -93,6 +116,8 @@ var counter = 0;
 
 				x+= this.rng.random(globals.SCREEN_WIDTH / 3, globals.SCREEN_WIDTH * 2);
 			}
+
+			return trees;
 		},
 
 		createBomb: function () {
