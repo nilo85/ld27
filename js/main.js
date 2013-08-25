@@ -4,7 +4,7 @@
 	$(function () {
 		var game = new Game();
 
-		game.loadLevel('level' + Math.random());
+		game.loadLevel(1);
 
 		game.start();
 	});
