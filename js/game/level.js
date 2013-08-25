@@ -5,9 +5,9 @@ var globals,
 
 (function (RNG, Math, Number, document, window, undefined){
 	'use strict';
-
+var counter = 0;
 	Level = function (seed, easiness) {
-
+		
 		this.easiness = easiness;
 
 		this.rng = new RNG(seed);
@@ -23,7 +23,9 @@ var globals,
 		this.goal = undefined;
 		this.timeMultiplier = undefined;
 		this.timeLeft = undefined;
+		this.score = undefined;
 		this.viewportPosition = undefined;
+		this.intervalId = undefined;
 
 		this.width = this.calculateLevelWidth();
 
@@ -49,6 +51,9 @@ var globals,
 		this.levelContainer.style.height = this.height + 'px';
 		this.levelContainer.style.width = this.width + 'px';
 
+		this.onComplete = undefined;
+		this.onFailure = undefined;
+
 		this.reset();
 
 
@@ -56,6 +61,14 @@ var globals,
 	};
 
 	Level.prototype =  {
+
+		setCompleteCallback: function (callback) {
+			this.onComplete = callback;
+		},
+
+		setFailureCallback: function (callback) {
+			this.onFailure = callback;
+		},
 
 		calculateLevelWidth: function () {
 			var possibleWidth = globals.RUN_SPEED * globals.START_TIME;
@@ -140,6 +153,7 @@ var globals,
 			this.timeMultiplier = 1;
 			this.timeLeft = globals.START_TIME;
 			this.viewportPosition = {x: 0, y: 0};
+			this.score = 0;
 		},
 
 		getY: function (x, fromY) {
@@ -166,7 +180,7 @@ var globals,
 
 			this.stop();
 
-			window.setInterval(function () {
+			this.intervalId = window.setInterval(function () {
 				level.update();
 			}, 16);
 			this.registerKeyListeners();
@@ -211,7 +225,10 @@ var globals,
 
 		update: function() {
 			var prevTime = this.time || Date.now(),
-				deltaTime;
+				deltaTime,
+				level = this;
+
+				console.log('update', this.id);
 
 			this.time = Date.now();
 			
@@ -219,18 +236,31 @@ var globals,
 
 			this.timeLeft -= deltaTime;
 
-
-			if(this.timeLeft < 0) {
-				
-				//this.reset();
-				this.bomb.explode();
+			if(this.player.position.x === this.goal.position.x) {
+				level.stop();
+				if (this.onComplete !== undefined) {
+					this.onComplete(this.score);
+				}
 				return;
 			}
+
+			if(this.timeLeft < 0) {
+				this.bomb.explode();
+				window.setTimeout(function () {
+					level.stop();
+					if (level.onFailure !== undefined) {
+						level.onFailure(level.score);
+					}
+				}, 4000);
+				return;
+			}
+
 
 
 			this.updatePlayer(deltaTime);
 			this.updateClock(deltaTime);
 			this.updateLevelTranslation(deltaTime);
+
 
 		},
 

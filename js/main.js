@@ -4,8 +4,7 @@
 	$(document).ready(function () {
 		var game = new Game();
 
-		game.loadLevel(1);
-
+		game.loadLevel(0);
 		game.start();
 	});
 

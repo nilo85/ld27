@@ -8,17 +8,17 @@ var globals,
 	'use strict';
 
 	var levels = [
-		{seed: 'level1', easiness: 2.0},
-		{seed: 'level2', easiness: 1.9},
-		{seed: 'level3', easiness: 1.8},
-		{seed: 'level4', easiness: 1.7},
-		{seed: 'level5', easiness: 1.6},
-		{seed: 'level6', easiness: 1.5},
-		{seed: 'level7', easiness: 1.4},
-		{seed: 'level8', easiness: 1.3},
-		{seed: 'level9', easiness: 1.2},
-		{seed: 'level10', easiness: 1.1},
-		{seed: 'level11', easiness: 1.0},
+		{name: 'Level 1', seed: 'level1', easiness: 2.0},
+		{name: 'Level 2', seed: 'level2', easiness: 1.9},
+		{name: 'Level 3', seed: 'level3', easiness: 1.8},
+		{name: 'Level 4', seed: 'level4', easiness: 1.7},
+		{name: 'Level 5', seed: 'level5', easiness: 1.6},
+		{name: 'Level 6', seed: 'level6', easiness: 1.5},
+		{name: 'Level 7', seed: 'level7', easiness: 1.4},
+		{name: 'Level 8', seed: 'level8', easiness: 1.3},
+		{name: 'Level 9', seed: 'level9', easiness: 1.2},
+		{name: 'Level 10', seed: 'level10', easiness: 1.1},
+		{name: 'Level 11', seed: 'level11', easiness: 1.0}
 		
 	];
 
@@ -45,14 +45,21 @@ var globals,
 
 		unloadLevel: function () {
 			if(this.level !== undefined) {
+				this.level.stop();
 				this.container.removeChild(this.level.container);
 				this.level = undefined;
 			}
 		},
 
 		loadLevel: function (level) {
+			var game = this;
+
 			this.unloadLevel();
 			this.level = new Level(levels[level].seed, levels[level].easiness);
+
+			this.level.setCompleteCallback(function (score) {
+				game.onComplete(level, score)
+			});
 
 			this.container.appendChild(this.level.container);
 		},
@@ -70,7 +77,12 @@ var globals,
 			}
 		},
 
+		onComplete: function (level) {
+			var nextLevel = level + 1;
 
+			this.loadLevel(nextLevel);
+			this.start();
+		}
 
 	};
 

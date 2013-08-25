@@ -59,9 +59,9 @@
 }
 @keyframes bomb-exploation {
 	from {
-		-webkit-transform: scale3d(.001, .001, .001);
+		transform: scale3d(.001, .001, .001);
 	}
 	to {
-		-webkit-transform: scale3d(50, 50, 50);
+		transform: scale3d(50, 50, 50);
 	}
 }

@@ -33,9 +33,12 @@ var globals,
 
 			this.container.style.left = this.position.x - 320 + 'px';
 			this.container.style.top = -this.position.y + 320 + 'px';
-			
+
 
 			this.container.className= 'bomb exploaded';
+			
+			this.update();
+
 		}
 
 	};
