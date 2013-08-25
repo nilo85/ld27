@@ -4,6 +4,12 @@ var Player,
 (function (RNG, Math, document){
 	'use strict';
 	
+	var GRAVITY = 0.004,
+		JUMP_SPEED = 1,
+		RUN_ACCELERATION = 0.1,
+		RUN_SPEED = 0.8,
+		STOP_ACCELERATION = 0.1;
+
 	Player = function () {
 
 		this.position =  {
@@ -47,23 +53,23 @@ var Player,
 				groundY;
 
 			if (prevGroundY === prevY && state.JUMP) {
-				this.speed.y = 1;
+				this.speed.y = JUMP_SPEED;
 			} else {
-				this.speed.y -= 0.00982*time;
+				this.speed.y -= GRAVITY * time;
 			}
 			if (state.MOVE_LEFT) {
 				this.speed.x -= 0.1*time;
 			} else if (state.MOVE_RIGHT) {
-				this.speed.x += 0.1*time;
+				this.speed.x += RUN_ACCELERATION * time;
 			} else if (this.speed.x > 0) {
-				this.speed.x -= 0.1*time;
+				this.speed.x -= STOP_ACCELERATION * time;
 				this.speed.x = Math.max(this.speed.x, 0);
 			} else if (this.speed.x < 0) {
-				this.speed.x += 0.1*time;
+				this.speed.x += STOP_ACCELERATION * time;
 				this.speed.x = Math.min(this.speed.x, 0);
 			}
 
-			this.speed.x = Math.max(Math.min(this.speed.x, 1), -1);
+			this.speed.x = Math.max(Math.min(this.speed.x, RUN_SPEED), -RUN_SPEED);
 
 			x = prevX + this.speed.x * time,
 			y = prevY + this.speed.y * time,
