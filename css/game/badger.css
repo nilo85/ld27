@@ -9,9 +9,18 @@
 	left: -18px;
 
 	-webkit-animation: badger 1s steps(16, end) infinite alternate;
+	animation: badger 1s steps(16, end) infinite alternate;
 }
 
 @-webkit-keyframes badger {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -592px;
+	}
+}
+@-keyframes badger {
 	from {
 		background-position: 0px;
 	}

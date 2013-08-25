@@ -42,10 +42,10 @@ var counter = 0;
 		
 		this.trees = this.createTrees();		
 		
-		this.createBomb();
 		this.createPlayer();
 		this.badgers = this.createBadgers();
-	
+		this.createBomb();
+		
 		this.createGoal();
 
 		this.height = Math.max(Math.max(Math.max(this.floor.height, this.background1.height), this.background2.height), this.background3.height);
@@ -83,18 +83,18 @@ var counter = 0;
 				badger,
 				offset = globals.SCREEN_WIDTH * 1.4,
 				y,
-				x = this.rng.random(offset, offset + (globals.SCREEN_WIDTH * this.easiness/2));	
+				x = this.rng.random(offset, offset + (globals.SCREEN_WIDTH * this.easiness/4));	
 
 			while (x < this.width - offset) {
 
 				y = this.getY(x, Number.MAX_VALUE);
 
-				badger = new Badger(x, y, 0);
+				badger = new Badger(x, y, this.rng.uniform());
 				this.levelContainer.appendChild(badger.container);
 
 				badgers.push(badger);
 
-				x += this.rng.random(offset, offset + (globals.SCREEN_WIDTH * this.easiness/2));	
+				x += this.rng.random((globals.SCREEN_WIDTH/10) * this.easiness, (globals.SCREEN_WIDTH/2) * this.easiness);	
 			}
 
 			return badgers;
@@ -253,6 +253,20 @@ var counter = 0;
 			}
 		},
 
+		complete: function () {
+			this.stop();
+			if (this.onComplete !== undefined) {
+				this.onComplete(this.score);
+			}
+		},
+
+		fail: function (message) {
+			this.stop();
+			if (this.onFailure !== undefined) {
+				this.onFailure(this.score, message);
+			}
+		},
+
 
 		update: function() {
 			var prevTime = this.time || Date.now(),
@@ -271,31 +285,56 @@ var counter = 0;
 			}
 
 			if(this.player.position.x === this.goal.position.x) {
-				level.stop();
-				if (this.onComplete !== undefined) {
-					this.onComplete(this.score);
-				}
+				this.complete();
 				return;
 			}
 
 			if(this.timeLeft < 0) {
 				this.bomb.explode();
 				window.setTimeout(function () {
-					level.stop();
-					if (level.onFailure !== undefined) {
-						level.onFailure(level.score);
-					}
+					level.fail('The bomb exploaded on you! You need to be faster.');
 				}, 4000);
 				return;
 			}
 
-
+			if (this.isPlayerCollidingWithBadger()) {
+				level.fail('You ran into an angry badger, avoid them!');
+				return;
+			}
 
 			this.updatePlayer(deltaTime);
 			this.updateClock(deltaTime);
 			this.updateLevelTranslation(deltaTime);
 
 
+		},
+
+		isPlayerCollidingWithBadger: function () {
+			var i,
+				badger,
+				badgetHitboxHeight = 32,
+				badgetHitboxWidth = 32;
+
+
+			for (i = 0; i < this.badgers.length; i++) {
+				badger = this.badgers[i];
+
+				if(this.timeLeft < 100) {
+					debugger;
+				}
+
+				if(
+					badger.position.y + badgetHitboxHeight >= this.player.position.y &&
+					badger.position.y <= this.player.position.y &&
+
+					badger.position.x - (badgetHitboxWidth/2)  <= this.player.position.x &&
+					badger.position.x + (badgetHitboxWidth/2)  >= this.player.position.x  ) {
+
+					return true;
+				}
+
+			}
+			return false;
 		},
 
 		updatePlayer: function (deltaTime) {
