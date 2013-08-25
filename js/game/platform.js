@@ -29,9 +29,11 @@ var globals,
 	}
 
 
-	Platform = function (width, type, seed) {
+	Platform = function (width, type, seed, baseHeight) {
 
 		this.rng = new RNG(seed);
+
+		this.baseHeight = baseHeight;
 
 		this.width = width;
 		this.type = type;
@@ -46,7 +48,7 @@ var globals,
 	Platform.prototype = {
 		create: function () {
 			var x = 0,
-				y = 500,
+				y = this.baseHeight,
 				maxHeight = 0,
 				part,
 				formula;

@@ -30,8 +30,8 @@ var globals,
 		this.createLevelContainer();
 		this.createHud();
 
-		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform());
-		this.background = this.createPlatform(this.width, 'background', this.rng.uniform());
+		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
+		this.background = this.createPlatform(this.width, 'background', this.rng.uniform(), 650);
 
 
 		this.createPlayer();
@@ -111,9 +111,9 @@ var globals,
 			return  y;
 		},
 
-		createPlatform: function (width, type, seed) {
-			var platform = new Platform(width, type, seed);
-			this.levelContainer.appendChild(platform.container);
+		createPlatform: function (width, type, seed, baseHeight) {
+			var platform = new Platform(width, type, seed, baseHeight);
+			this.levelContainer.appendChild(platform.container, baseHeight);
 
 			return platform;
 		},
