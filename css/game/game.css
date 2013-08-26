@@ -10,9 +10,17 @@ html, body {
 	height: 480px;
 	overflow: hidden;
 	-webkit-transform-origin: left top;
-	-webkit-transform: scale3d(1, 1, 1);
+	-o-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
 	transform-origin: left top;
+	
+	-webkit-transform: scale3d(1, 1, 1);
+	-o-transform: scale3d(1, 1, 1);
+	-ms-transform: scale3d(1, 1, 1);
+	-moz-transform: scale3d(1, 1, 1);
 	transform: scale3d(1, 1, 1);
+	
 	margin: auto;
 }
 

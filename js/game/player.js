@@ -2,9 +2,11 @@ var globals,
 	Player,
 	RNG;
 
-(function (RNG, Math, document, Number, undefined){
+(function (RNG, Math, document, Number, Modernizr, undefined){
 	'use strict';
 	
+	var transformProp = Modernizr.prefixed('transform');
+
 	Player = function () {
 
 		this.totalTime = 0;
@@ -105,10 +107,10 @@ var globals,
 				transform += ' scaleX(-1)';
 			}
 
-			this.container.style.webkitTransform = this.container.style.transform = transform;
+			this.container.style[transformProp] = transform;
 
 		}
 
 	}
 
-})(RNG, Math, document, Number);
+})(RNG, Math, document, Number, Modernizr);

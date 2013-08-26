@@ -77,11 +77,17 @@
 	height: 640px;
 
 	-webkit-transform: translate3d(0px, 0px, 0px);
+	-o-transform: translate3d(0px, 0px, 0px);
+	-ms-transform: translate3d(0px, 0px, 0px);
+	-moz-transform: translate3d(0px, 0px, 0px);
 	transform: translate3d(0px, 0px, 0px);
 }
 
 .exploaded.viewport {
 	-webkit-animation: viewport-explosion 0.01s 100;
+	-o-animation: viewport-explosion 0.01s 100;
+	-ms-animation: viewport-explosion 0.01s 100;
+	-moz-animation: viewport-explosion 0.01s 100;
 	animation: viewport-explosion 0.01s 100;
 }
 
@@ -99,8 +105,45 @@
 		-webkit-transform: translate3d(0px, -10px, 0px);
 	}
 }
+@-o-keyframes viewport-explosion {
+	0% {
+		-o-transform: translate3d(10px, 10px, 0px);
+	}
 
+	5% {
+		-o-transform: translate3d(-10px, 0px, 0px);
+	}
 
+	100% {
+		-o-transform: translate3d(0px, -10px, 0px);
+	}
+}
+@-ms-keyframes viewport-explosion {
+	0% {
+		-ms-transform: translate3d(10px, 10px, 0px);
+	}
+
+	5% {
+		-ms-transform: translate3d(-10px, 0px, 0px);
+	}
+
+	100% {
+		-ms-transform: translate3d(0px, -10px, 0px);
+	}
+}
+@-moz-keyframes viewport-explosion {
+	0% {
+		-moz-transform: translate3d(10px, 10px, 0px);
+	}
+
+	5% {
+		-moz-transform: translate3d(-10px, 0px, 0px);
+	}
+
+	100% {
+		-moz-transform: translate3d(0px, -10px, 0px);
+	}
+}
 @keyframes viewport-explosion {
 	0% {
 		transform: translate3d(10px, 10px, 0px);

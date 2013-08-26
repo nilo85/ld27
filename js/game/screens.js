@@ -31,7 +31,6 @@ var globals,
 		create: function () {
 			var thisScreen = this,
 				keyUpListener = function () {
-					console.log('keyup')
 					window.removeEventListener('keyup', keyUpListener);
 					if(thisScreen.onComplete !== undefined) {
 						thisScreen.onComplete();

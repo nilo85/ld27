@@ -3,8 +3,10 @@ var globals,
 	Player,
 	Platform;
 
-(function (RNG, Math, Number, document, window, undefined){
+(function (RNG, Math, Number, document, window, Modernizr, undefined){
 	'use strict';
+
+	var transformProp = Modernizr.prefixed('transform');
 
 	Level = function (seed, easiness, name) {
 		
@@ -500,9 +502,9 @@ var globals,
 			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
 
 
-			this.levelContainer.style.webkitTransform = this.levelContainer.style.transform = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			
+			this.levelContainer.style[transformProp] = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			
 		}
 
 	}
 
-})(RNG, Math, Number, document, window);
+})(RNG, Math, Number, document, window, Modernizr);

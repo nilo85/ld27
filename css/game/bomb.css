@@ -8,9 +8,15 @@
 	left: -21px;
 
 	-webkit-animation: bomb 2s steps(2, end) infinite;
+	-o-animation: bomb 2s steps(2, end) infinite;
+	-ms-animation: bomb 2s steps(2, end) infinite;
+	-moz-animation: bomb 2s steps(2, end) infinite;
 	animation: bomb 2s steps(2, end) infinite;
 
 	-webkit-transform-origin: center center;
+	-o-transform-origin: center center;
+	-ms-transform-origin: center center;
+	-moz-transform-origin: center center;
 	transform-origin: center center;
 
 }
@@ -23,6 +29,35 @@
 		background-position: 0px -42px;		
 	}
 }
+
+@-o-keyframes bomb {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -42px;		
+	}
+}
+
+@-ms-keyframes bomb {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -42px;		
+	}
+}
+
+@-moz-keyframes bomb {
+	from {
+		background-position: 0px 0px;
+	}
+	to {
+		background-position: 0px -42px;		
+	}
+}
+
+
 @keyframes bomb {
 	from {
 		background-position: 0px 0px;
@@ -46,6 +81,9 @@
 
 
 	-webkit-animation: bomb-exploation 4s;
+	-o-animation: bomb-exploation 4s;
+	-ms-animation: bomb-exploation 4s;
+	-moz-animation: bomb-exploation 4s;
 	animation: bomb-exploation 4s;
 
 }
@@ -56,6 +94,30 @@
 	}
 	to {
 		-webkit-transform: scale3d(50, 50, 50);
+	}
+}
+@-o-keyframes bomb-exploation {
+	from {
+		-o-transform: scale3d(.001, .001, .001);
+	}
+	to {
+		-o-transform: scale3d(50, 50, 50);
+	}
+}
+@-ms-keyframes bomb-exploation {
+	from {
+		-ms-transform: scale3d(.001, .001, .001);
+	}
+	to {
+		-ms-transform: scale3d(50, 50, 50);
+	}
+}
+@-moz-keyframes bomb-exploation {
+	from {
+		-moz-transform: scale3d(.001, .001, .001);
+	}
+	to {
+		-moz-transform: scale3d(50, 50, 50);
 	}
 }
 @keyframes bomb-exploation {

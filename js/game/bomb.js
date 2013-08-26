@@ -1,7 +1,9 @@
 var globals,
 	Bomb;
-(function (document, undefined) {
+(function (document, Modernizr, undefined) {
 	'use strict';
+
+	var transformProp = Modernizr.prefixed('transform');
 
 	Bomb = function (x, y) {
 		this.container = undefined;
@@ -20,10 +22,10 @@ var globals,
 		},
 
 		update: function () {
-			this.container.style.webkitTransform = this.container.style.transform = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
+			this.container.style[transformProp] = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
 		}
 
 
 	};
 
-})(document);
+})(document, Modernizr);

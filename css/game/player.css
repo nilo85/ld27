@@ -7,12 +7,33 @@
 	background-image: url(../../img/player.png);
 
 	-webkit-transform-origin: center center;
-	-webkit-animation: player-standing .5s steps(6, end) infinite;
-
+	-o-transform-origin: center center;
+	-ms-transform-origin: center center;
+	-moz-transform-origin: center center;
 	transform-origin: center center;
+
+	-webkit-animation: player-standing .5s steps(6, end) infinite;
+	-o-animation: player-standing .5s steps(6, end) infinite;
+	-ms-animation: player-standing .5s steps(6, end) infinite;
+	-moz-animation: player-standing .5s steps(6, end) infinite;
 	animation: player-standing .5s steps(6, end) infinite;
 }
 @-webkit-keyframes player-standing {
+	from, to {
+		background-position: -106px;
+	}
+}
+@-o-keyframes player-standing {
+	from, to {
+		background-position: -106px;
+	}
+}
+@-ms-keyframes player-standing {
+	from, to {
+		background-position: -106px;
+	}
+}
+@-moz-keyframes player-standing {
 	from, to {
 		background-position: -106px;
 	}
@@ -25,6 +46,30 @@
 
 
 @-webkit-keyframes player-walking {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -318px;		
+	}
+}
+@-o-keyframes player-walking {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -318px;		
+	}
+}
+@-ms-keyframes player-walking {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -318px;		
+	}
+}
+@-moz-keyframes player-walking {
 	from {
 		background-position: 0px;
 	}

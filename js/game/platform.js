@@ -72,7 +72,6 @@ var globals,
 				y = formula.calculate(x, part);
 
 				this.parts.push(part);
-			//console.log(part);
 			}
 
 			this.width = x;

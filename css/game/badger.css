@@ -20,6 +20,30 @@
 		background-position: -592px;
 	}
 }
+@-o-keyframes badger {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -592px;
+	}
+}
+@-ms-keyframes badger {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -592px;
+	}
+}
+@-moz-keyframes badger {
+	from {
+		background-position: 0px;
+	}
+	to {
+		background-position: -592px;
+	}
+}
 @-keyframes badger {
 	from {
 		background-position: 0px;

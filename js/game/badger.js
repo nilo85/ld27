@@ -1,8 +1,11 @@
 var globals,
 	Badger;
 
-(function () {
+(function (Modernizr) {
 	'use strict';
+
+	var transformProp = Modernizr.prefixed('transform'),
+		animationDelayProp = Modernizr.prefixed('animationDelay');
 
 	Badger = function (x, y, delay) {
 		this.container = undefined;
@@ -17,13 +20,13 @@ var globals,
 		create: function () {
 			this.container = document.createElement('div');
 			this.container.className = 'badger';
-			this.container.style.webkitAnimationDelay = this.container.style.animationDelay = this.delay + 's'; 
+			this.container.style[animationDelayProp] = this.delay.toFixed(2) + 's'; 
 			this.update();
 		},
 
 		update: function () {
-			this.container.style.webkitTransform = this.container.style.transform = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
+			this.container.style[transformProp] = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
 		}	
 	};
 
-})();
+})(Modernizr);

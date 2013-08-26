@@ -1,9 +1,10 @@
 var globals,
 	Adrenalin;
 
-(function () {
+(function (Modernizr) {
 	'use strict';
 
+	var transformProp = Modernizr.prefixed('transform');
 
 	Adrenalin = function (x, y) {
 		this.container = undefined;
@@ -22,10 +23,10 @@ var globals,
 		},
 
 		update: function () {
-			this.container.style.webkitTransform = this.container.style.transform = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
+			this.container.style[transformProp] = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
 		}
 
 
 	};
 
-})();
+})(Modernizr);
