@@ -11,6 +11,8 @@ var globals,
 		MATERIAL;
 
 	function getMaterial() {
+		MATERIAL = undefined;
+
 		if (MATERIAL === undefined) {
 			MATERIAL =  new THREE.MeshBasicMaterial({ 
 				color: 0xff0000
@@ -20,6 +22,8 @@ var globals,
 	}
 
 	function getGeometry() {
+		GEOMETRY = undefined;
+		
 		if (GEOMETRY === undefined) {
 
 			GEOMETRY = new THREE.Geometry();
