@@ -6,7 +6,17 @@ var globals,
 (function (RNG, Math, Number, document, window, Modernizr, undefined){
 	'use strict';
 
-	var transformProp = Modernizr.prefixed('transform');
+
+	var	FLOOR_Z = 0,
+		TREE_Z = 0,
+		ADRENALIN_Z = 10,
+		BADGER_Z = 10,
+		BOMB_Z = 10,
+		GOAL_Z = 10,
+		PLAYER_Z = 10,
+		BACKGROUND_1_Z = -100,
+		BACKGROUND_2_Z = -200,
+		BACKGROUND_3_Z = -300
 
 	Level = function (seed, easiness, name) {
 		
@@ -15,19 +25,9 @@ var globals,
 
 		this.rng = new RNG(seed);
 
-		this.container = undefined;
-		this.levelContainer = undefined;
-		this.hudContainer = undefined;
-
-		this.hudClock = undefined; 
-		this.hudClockLevel = undefined;
-		this.hudClockLevelBar = undefined;
-
-		this.hudAdrenalinLevel = undefined;
-		this.hudAdrenalinLevelBar = undefined;
-		this.hudAdrenalinLevelBarProgress = undefined;
-
-		this.hudMessage = undefined; 
+		this.renderer = undefined;
+		this.camera = undefined;
+		this.scene = undefined;
 
 		this.player = undefined;
 		this.bomb = undefined;
@@ -38,41 +38,41 @@ var globals,
 		this.messageTimeLeft = undefined;
 
 		this.score = undefined;
-		this.viewportPosition = undefined;
 		this.intervalId = undefined;
 		this.hasFailed = undefined;
 
 		this.width = this.calculateLevelWidth();
 
 		this.createContainer();
-		this.createSky();
-		this.createLevelContainer();
-		this.createHud();
 
-		this.background3 = this.createPlatform(this.width, 'background3', this.rng.uniform(), 650);
-		this.background2 = this.createPlatform(this.width, 'background2', this.rng.uniform(), 600);
-		this.background1 = this.createPlatform(this.width, 'background1', this.rng.uniform(), 550);
-		this.floor = this.createPlatform(this.width, 'floor', this.rng.uniform(), 500);
-		
+//		this.createHud();
+
+		this.background3 = this.createPlatform(this.width, BACKGROUND_3_Z, 'background3', this.rng.uniform(), 650);
+		this.background2 = this.createPlatform(this.width, BACKGROUND_2_Z, 'background2', this.rng.uniform(), 600);
+		this.background1 = this.createPlatform(this.width, BACKGROUND_1_Z, 'background1', this.rng.uniform(), 550);
+		this.floor = this.createPlatform(this.width, FLOOR_Z, 'floor', this.rng.uniform(), 500);
+
 		this.trees = this.createTrees();		
+	
 		this.adrenalinShots = this.createAdrenalinShots();
+		this.badgers = this.createBadgers();
 		
 		this.createPlayer();
-		this.badgers = this.createBadgers();
 		this.createBomb();
 		
 		this.createGoal();
 
 		this.height = Math.max(Math.max(Math.max(this.floor.height, this.background1.height), this.background2.height), this.background3.height);
-		
+/*		
+
 		this.levelContainer.style.height = this.height + 'px';
 		this.levelContainer.style.width = this.width + 'px';
+*/
 
 		this.onComplete = undefined;
 		this.onFailure = undefined;
 
 		this.reset();
-
 
 
 	};
@@ -104,8 +104,11 @@ var globals,
 
 				y = this.getY(x, Number.MAX_VALUE) + this.rng.random(10, 200);
 
-				adrenalin = new Adrenalin(x, y, this.rng.uniform());
-				this.levelContainer.appendChild(adrenalin.container);
+				// DUMMY RANDOM TO PRESERVE SEED
+				this.rng.uniform();
+
+				adrenalin = new Adrenalin(x, y, ADRENALIN_Z);
+				this.scene.add(adrenalin.mesh);
 
 				adrenalinShots.push(adrenalin);
 
@@ -126,8 +129,8 @@ var globals,
 
 				y = this.getY(x, Number.MAX_VALUE);
 
-				badger = new Badger(x, y, this.rng.uniform());
-				this.levelContainer.appendChild(badger.container);
+				badger = new Badger(x, y, BADGER_Z, this.rng.uniform());
+				this.scene.add(badger.mesh);
 
 				badgers.push(badger);
 
@@ -147,8 +150,10 @@ var globals,
 
 				y = this.getY(x, Number.MAX_VALUE);
 
-				tree = new Tree(x, y);
-				this.levelContainer.insertBefore(tree.container, this.floor.container);
+				tree = new Tree(x, y, TREE_Z);
+				
+				this.scene.add(tree.mesh);
+
 				trees.push(tree);
 
 				x+= this.rng.random(globals.SCREEN_WIDTH / 3, globals.SCREEN_WIDTH * 2);
@@ -161,30 +166,42 @@ var globals,
 			var bombX = globals.SCREEN_WIDTH,
 				bombY = this.getY(bombX, Number.MAX_VALUE);
 
-			this.bomb = new Bomb(bombX, bombY);
-			this.levelContainer.appendChild(this.bomb.container);
+			this.bomb = new Bomb(bombX, bombY, BOMB_Z);
+			this.scene.add(this.bomb.mesh);
 		},
 
 		createGoal: function () {
 			var goalX = this.width - globals.SCREEN_WIDTH,
 				goalY = this.getY(goalX, Number.MAX_VALUE);
 
-			this.goal = new Goal(goalX, goalY);
-			this.levelContainer.appendChild(this.goal.container);
+			this.goal = new Goal(goalX, goalY, GOAL_Z);
+			this.scene.add(this.goal.mesh);
 		},
 
 		createContainer: function () {
 			this.container = document.createElement('div');
 			this.container.className = 'viewport';
 
+			this.renderer = new THREE.WebGLRenderer({
+				antialias : true
+			});
+			this.renderer.setClearColorHex( 0xbcccff, 1 );
+	
+			this.renderer.setSize(globals.SCREEN_WIDTH, globals.SCREEN_HEIGHT);
 
+			this.camera = new THREE.PerspectiveCamera(
+				45, globals.SCREEN_WIDTH / globals.SCREEN_HEIGHT,
+				0.1, 10000);
+			this.camera.position.z = 800;
+			this.camera.position.y = 0;
+			this.camera.position.x = 0;
+
+
+			this.scene = new THREE.Scene();
+
+			this.container.appendChild(this.renderer.domElement);
 		},
 
-		createLevelContainer: function () {
-			this.levelContainer = document.createElement('div');
-			this.levelContainer.className = 'level';
-			this.container.appendChild(this.levelContainer);			
-		},
 
 		createHud: function () {
 			this.hudContainer = document.createElement('div');
@@ -213,32 +230,28 @@ var globals,
 
 		},
 
-		createSky: function () {
-			this.sky = document.createElement('div');
-			this.sky.className = 'sky';
-			this.container.appendChild(this.sky);
-		},
-
 		createPlayer: function () {
-			this.player = new Player();
-			this.levelContainer.appendChild(this.player.container);
+			this.player = new Player(0, 0, PLAYER_Z);
+			this.scene.add(this.player.mesh);
 		},
 
 		reset: function () {
 			var startX = globals.SCREEN_WIDTH * 1.2;
 
 			this.player.reset();
-			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE));			
+			this.player.setPosition(startX, this.getY(startX, Number.MAX_VALUE), PLAYER_Z);			
 			this.bombTimeLeft = globals.START_TIME;
 			this.adrenalinTimeLeft = 0;
 			this.messageTimeLeft = 0;
 		
-			this.viewportPosition = {x: 0, y: 0};
+
 			this.score = 0;
 			this.hasFailed = false;
 		},
 
 		showMessage: function (message) {
+			return;
+			// TODO
 			this.hideMessage();
 
 			this.messageTimeLeft = globals.MESSAGE_TIME;
@@ -268,15 +281,17 @@ var globals,
 			return  y;
 		},
 
-		createPlatform: function (width, type, seed, baseHeight) {
-			var platform = new Platform(width, type, seed, baseHeight);
-			this.levelContainer.appendChild(platform.container, baseHeight);
+		createPlatform: function (width, z, type, seed, baseHeight) {
+			var platform = new Platform(width, z, type, seed, baseHeight);
+
+			this.scene.add(platform.mesh);
 
 			return platform;
 		},
 
 
 		start: function () {
+
 			var level = this;
 
 			this.stop();
@@ -380,15 +395,15 @@ var globals,
 			if (this.hasFailed) {
 				return;
 			}
-
 		
 			if(this.player.position.x === this.goal.position.x) {
 				this.complete();
 				return;
 			}
 
+
 			if(this.bombTimeLeft < 0) {
-				this.container.className = 'viewport exploaded';
+				//this.container.className = 'viewport exploaded';
 				level.fail('You did not reach the safe zone before the bomb exploaded, please try it again, but this time, please HURRY UP!', 2000);
 				return;
 			}
@@ -401,12 +416,13 @@ var globals,
 			this.updatePlayer(deltaTime);
 
 			this.consumeCollidingAdrenalin();
-
+/*
 			this.updateClock(deltaTime);
 			this.updateAdrenalin(deltaTime);
-			this.updateLevelTranslation(deltaTime);
+*/
+			this.updateCamera(deltaTime);
 
-
+			this.renderer.render(this.scene, this.camera);
 		},
 
 		consumeCollidingAdrenalin: function () {
@@ -428,7 +444,7 @@ var globals,
 					this.adrenalinTimeLeft = globals.ADRENALIN_TIME;
 
 					this.adrenalinShots.splice(i, 1);
-					this.levelContainer.removeChild(adrenalin.container);
+					this.scene.remove(adrenalin.mesh);
 
 					this.showMessage('Adrenalin makes time slow and movement fast, gravity is untouched, YEAHAA!');
 
@@ -477,7 +493,7 @@ var globals,
 			this.hudAdrenalinLevelBarProgress.style.width = (this.adrenalinTimeLeft / globals.ADRENALIN_TIME * 100).toFixed(0) + '%';			
 		},
 
-		updateLevelTranslation: function (deltaTime) {
+		updateCamera: function (deltaTime) {
 			
 			var centerX,
 				minX,
@@ -486,24 +502,29 @@ var globals,
 				maxY,
 				groundY;
 
+			this.camera.position.y = this.player.position.y;
+			this.camera.position.x = this.player.position.x;
+
+
+			return;
+
 			centerX = this.player.position.x;
 			groundY = this.getY(centerX, Number.MAX_VALUE);
 
 			maxX = centerX - globals.SCREEN_WIDTH / 4;
 			minX = centerX - globals.SCREEN_WIDTH / 2;
 
-			this.viewportPosition.x = Math.min(maxX, this.viewportPosition.x);
-			this.viewportPosition.x = Math.max(minX, this.viewportPosition.x);
+			this.camera.position.x = Math.min(maxX, this.camera.position.x);
+			this.camera.position.x = Math.max(minX, this.camera.position.x);
 
-			maxY = this.player.position.y - globals.SCREEN_HEIGHT / 3;
-			minY = this.player.position.y - globals.SCREEN_HEIGHT / 1.33;
+			minY = this.player.position.y + globals.SCREEN_HEIGHT / 3;
+			maxY = this.player.position.y + globals.SCREEN_HEIGHT / 1.33;
 
-			this.viewportPosition.y = Math.max(minY, this.viewportPosition.y);
-			this.viewportPosition.y = Math.min(maxY, this.viewportPosition.y);
+			this.camera.position.y = Math.max(minY, this.camera.position.y);
+			this.camera.position.y = Math.min(maxY, this.camera.position.y);
 
-
-			this.levelContainer.style[transformProp] = 'translate3d(' + -this.viewportPosition.x.toFixed(2) + 'px, ' + this.viewportPosition.y.toFixed(2) + 'px, 0px)';			
 		}
+
 
 	}
 

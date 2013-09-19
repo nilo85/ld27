@@ -4,12 +4,45 @@ var globals,
 (function (Modernizr) {
 	'use strict';
 
-	var transformProp = Modernizr.prefixed('transform'),
-		animationDelayProp = Modernizr.prefixed('animationDelay');
+	var WIDTH = 37,
+		HEIGHT = 71,
+		BOTTOM_OFFSET = -40,
 
-	Badger = function (x, y, delay) {
-		this.container = undefined;
-		this.position = {x: x, y: y};
+		GEOMETRY,
+		MATERIAL;
+
+	function getMaterial() {
+		if (MATERIAL === undefined) {
+			MATERIAL =  new THREE.MeshBasicMaterial({ 
+				color: 0xff00ff
+			});
+		}
+		return MATERIAL;
+	}
+
+	function getGeometry() {
+		if (GEOMETRY === undefined) {
+
+			GEOMETRY = new THREE.Geometry();
+
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), BOTTOM_OFFSET, 0));
+			
+			GEOMETRY.faces.push( new THREE.Face3( 0, 2, 1 ) );
+			GEOMETRY.faces.push( new THREE.Face3( 0, 3, 2 ) );
+
+			GEOMETRY.computeFaceNormals();
+
+		}
+		return GEOMETRY;
+	}
+
+
+	Badger = function (x, y, z, delay) {
+		this.mesh = undefined;
+		this.position = {x: x, y: y, z: z};
 		this.delay = delay;
 
 		this.create();
@@ -18,15 +51,14 @@ var globals,
 
 	Badger.prototype = {
 		create: function () {
-			this.container = document.createElement('div');
-			this.container.className = 'badger';
-			this.container.style[animationDelayProp] = this.delay.toFixed(2) + 's'; 
-			this.update();
-		},
+			this.mesh = new THREE.Mesh(
+				getGeometry(),
+				getMaterial()
+			);
+			this.mesh.position = this.position;
+		}
 
-		update: function () {
-			this.container.style[transformProp] = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
-		}	
+	
 	};
 
 })(Modernizr);

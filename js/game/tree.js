@@ -4,24 +4,56 @@ var globals,
 (function (document, Modernizr, undefined) {
 	'use strict';
 
-	var transformProp = Modernizr.prefixed('transform');
+	var WIDTH = 189,
+		HEIGHT = 220,
+		BOTTOM_OFFSET = -23,
 
-	Tree = function (x, y) {
-		this.container = undefined;
-		this.position = {x: x, y: y};
+		GEOMETRY,
+		MATERIAL;
+
+	function getMaterial() {
+		if (MATERIAL === undefined) {
+			MATERIAL =  new THREE.MeshBasicMaterial({ 
+				color: 0x00ff00
+			});
+		}
+		return MATERIAL;
+	}
+
+	function getGeometry() {
+		if (GEOMETRY === undefined) {
+
+			GEOMETRY = new THREE.Geometry();
+
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), BOTTOM_OFFSET, 0));
+			
+			GEOMETRY.faces.push( new THREE.Face3( 0, 2, 1 ) );
+			GEOMETRY.faces.push( new THREE.Face3( 0, 3, 2 ) );
+
+			GEOMETRY.computeFaceNormals();
+
+		}
+		return GEOMETRY;
+	}
+
+	Tree = function (x, y, z) {
+		this.mesh = undefined;
+		this.position = {x: x, y: y, z: z};
 
 		this.create();
 	};
 
 	Tree.prototype = {
 		create: function () {
-			this.container = document.createElement('div');
-			this.container.className = 'tree';
-			this.update();
-		},
-
-		update: function () {
-			this.container.style[transformProp] = 'translate3d(' + this.position.x + 'px, ' + -this.position.y + 'px, 0px)';
+			
+			this.mesh = new THREE.Mesh(
+				getGeometry(),
+				getMaterial()
+			);
+			this.mesh.position = this.position;
 		}
 	};
 

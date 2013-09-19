@@ -29,7 +29,8 @@ var globals,
 	};
 
 
-	Platform = function (width, type, seed, baseHeight) {
+
+	Platform = function (width, z, type, seed, baseHeight) {
 
 		this.rng = new RNG(seed);
 
@@ -37,8 +38,10 @@ var globals,
 
 		this.width = width;
 		this.type = type;
+		this.z = z;
 
-		this.container = null;
+		this.mesh = undefined;
+
 		this.parts = [];
 		this.canvases = [];
 		
@@ -77,82 +80,61 @@ var globals,
 			this.width = x;
 			this.height = maxHeight;
 
-			this.container = document.createElement('div');
-			this.container.className = 'platform ' + this.type;
-			this.container.style.height = maxHeight + 'px';
 
-			this.createCanvases();
+			this.mesh = new THREE.Mesh(
+				this.createGeometry(),
+				this.createMaterial()
+			);
 
-		},
 
-		createCanvases: function () {
-			var i,
-				part,
-				canvas;
 
-			for (i = 0; i < this.parts.length; i++) {
-				part = this.parts[i];
 
-				canvas = this.createCanvas(part);
 
-				this.canvases.push(canvas);
-				this.container.appendChild(canvas);
-			}			
-
+			//this.createCanvases();
 
 		},
-		createCanvas: function (part) {
-			var x,
-				y,
+		createMaterial: function () {
+			if(this.type === 'floor') {
+				return new THREE.MeshBasicMaterial({ 
+					color: 0x4e9f39
+				});
+			} else {
+				return new THREE.MeshBasicMaterial({
+					color: 0x4e9f39, 
+					transparent: true, 
+					opacity: 0.5
+				});				
+			}
+		},
+
+		createGeometry: function () {
+
+			var x,y,i,
 				part,
-				canvas = this.canvas = document.createElement('canvas'),
-				ctx = canvas.getContext('2d'),
-				dirtPattern,
-				grassPattern,
+				geometry = new THREE.Geometry();
 
-				lineWidth = 16,
+			for (x = 0; x < this.width; x += 10) {
 
-				height = canvas.height = part.formula.getMax(part) + (lineWidth/2),
-				width = canvas.width = part.width; 
-			
-			canvas.style.left = part.x + 'px';
+				part = this.getPart(x);
 
-			ctx.beginPath();
-
-			ctx.moveTo(-1000, height);
-			ctx.lineTo(-1000, part.formula.calculate(part.x, part));
-
-
-			for (x = part.x; x <= part.x + part.width; x++) {
 				y = part.formula.calculate(x, part);
 
-				ctx.lineTo(x - part.x, height-y);
+				geometry.vertices.push(new THREE.Vector3(x, 0, this.z));
+				geometry.vertices.push(new THREE.Vector3(x, y, this.z));
+
 			}
-			ctx.lineTo(width+1000, part.formula.calculate(part.x+part.width, part));
-			
-			ctx.lineTo(width+lineWidth, height);
-			ctx.closePath();
 
-			grassPattern = ctx.createPattern(document.getElementById('pattern-grass'), 'repeat');			
-			dirtPattern = ctx.createPattern(document.getElementById('pattern-dirt'), 'repeat');			
-
-			
-			if(this.type === 'floor') {
-				ctx.fillStyle = dirtPattern;
-				ctx.fill();
-
-				ctx.lineWidth = lineWidth;
-				ctx.strokeStyle = grassPattern;
-				ctx.stroke();
-			} else {
-				ctx.fillStyle = grassPattern;
-				ctx.fill();				
+			for (i = 0; i < geometry.vertices.length - 2; i += 2) {
+				geometry.faces.push( new THREE.Face3( i+0, i+2, i+1 ) );
+				geometry.faces.push( new THREE.Face3( i+2, i+3, i+1 ) );
 			}
-			
-			
 
-			return canvas;
+			geometry.computeFaceNormals();
+
+
+			return geometry;
 		},
+
 
 		getPart: function (x) {
 			var i, part;

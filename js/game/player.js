@@ -5,15 +5,49 @@ var globals,
 (function (RNG, Math, document, Number, Modernizr, undefined){
 	'use strict';
 	
-	var transformProp = Modernizr.prefixed('transform');
+	var WIDTH = 53,
+		HEIGHT = 68,
+		BOTTOM_OFFSET = 0,
 
-	Player = function () {
+		GEOMETRY,
+		MATERIAL;
+
+	function getMaterial() {
+		if (MATERIAL === undefined) {
+			MATERIAL =  new THREE.MeshBasicMaterial({ 
+				color: 0x0000ff
+			});
+		}
+		return MATERIAL;
+	}
+
+	function getGeometry() {
+		if (GEOMETRY === undefined) {
+
+			GEOMETRY = new THREE.Geometry();
+
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3(-(WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), HEIGHT + BOTTOM_OFFSET, 0));
+			GEOMETRY.vertices.push(new THREE.Vector3((WIDTH/2), BOTTOM_OFFSET, 0));
+			
+			GEOMETRY.faces.push( new THREE.Face3( 0, 2, 1 ) );
+			GEOMETRY.faces.push( new THREE.Face3( 0, 3, 2 ) );
+
+			GEOMETRY.computeFaceNormals();
+
+		}
+		return GEOMETRY;
+	}
+
+	Player = function (x, y, z) {
 
 		this.totalTime = 0;
 
 		this.position =  {
-			x: 0,
-			y: 0
+			x: x,
+			y: y,
+			z: z
 		},
 		this.speed = {
 			x: 0,
@@ -22,22 +56,25 @@ var globals,
 
 
 
-		this.container = undefined;
+		this.mesh = undefined;
 		this.create();
 	};
 
 	Player.prototype = {
 		create: function () {
-			this.container = document.createElement('div');
-			this.container.className = 'player';
+			this.mesh = new THREE.Mesh(
+				getGeometry(),
+				getMaterial()
+			);
+			this.mesh.position = this.position;
 		},
 
 		reset: function () {
 
 		},
 
-		setPosition: function (x, y) {
-			this.position = {x: x, y: y};
+		setPosition: function (x, y, z) {
+			this.mesh.position = this.position = {x: x, y: y, z: z};
 			this.update();
 		},
 
@@ -96,18 +133,18 @@ var globals,
 			}
 
 			if (this.speed.x !== 0) {
-				this.container.style.webkitAnimationName = this.container.style.animationName = 'player-walking';
+		//		this.container.style.webkitAnimationName = this.container.style.animationName = 'player-walking';
 			} else {
-				this.container.style.webkitAnimationName = this.container.style.animationName = 'player-standing';
+		//		this.container.style.webkitAnimationName = this.container.style.animationName = 'player-standing';
 			}
 			
-			transform += ' translate3d(' + this.position.x + 'px, ' + (-this.position.y) + 'px, 0)';
+			
 		
 			if (this.speed.x < 0) {
-				transform += ' scaleX(-1)';
+				// TODO
+				//	transform += ' scaleX(-1)';
 			}
 
-			this.container.style[transformProp] = transform;
 
 		}
 
